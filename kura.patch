@@ -1,5 +1,5 @@
 diff --git a/kura/distrib/src/main/ant/build_equinox_distrib.xml b/kura/distrib/src/main/ant/build_equinox_distrib.xml
-index 4827b7b..f769197 100644
+index 4827b7b..88e4d82 100644
 --- a/kura/distrib/src/main/ant/build_equinox_distrib.xml
 +++ b/kura/distrib/src/main/ant/build_equinox_distrib.xml
 @@ -110,7 +110,6 @@
@@ -10,7 +10,7 @@ index 4827b7b..f769197 100644
  		<antcall target="linux.watchdog-config" />
  		
  		
-@@ -171,7 +170,7 @@
+@@ -171,9 +170,10 @@
  KURA_RUNNING=`ps ax | grep java | grep "org.eclipse.osgi"`
  
  if [ -z "$KURA_RUNNING" ] ; then
@@ -18,8 +18,11 @@ index 4827b7b..f769197 100644
 +        exec java -Xms${kura.mem.size} -Xmx${kura.mem.size} \
          -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/log/kura-heapdump.hprof \
          -XX:ErrorFile=/var/log/kura-error.log \
++        ${JAVA_OPTS} \
          -Dkura.os.version=${kura.os.version} \
-@@ -507,23 +506,19 @@
+         -Dkura.arch=${kura.arch} \
+         -Dtarget.device=${target.device} \
+@@ -507,23 +507,19 @@
                          prefix="${build.output.name}/kura/plugins" />
  			<zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.core.net_${org.eclipse.kura.core.net.version}.jar"
                          prefix="${build.output.name}/kura/plugins" />
@@ -48,7 +51,7 @@ index 4827b7b..f769197 100644
                          prefix="${build.output.name}/kura/plugins" />
  			<zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.linux_${org.eclipse.kura.linux.version}.jar"
                          prefix="${build.output.name}/kura/plugins" />
-@@ -1142,7 +1137,7 @@
+@@ -1142,7 +1138,7 @@
  	<target name="linux.clock-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
  			<entry key="osgi.bundles" operation="+"
@@ -57,7 +60,7 @@ index 4827b7b..f769197 100644
  		</propertyfile>
  	</target>
  	
-@@ -1156,16 +1151,14 @@
+@@ -1156,16 +1152,14 @@
  	<target name="linux.position-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
  			<entry key="osgi.bundles" operation="+"
@@ -76,7 +79,7 @@ index 4827b7b..f769197 100644
  		</propertyfile>
  	</target>
  	
-@@ -1179,7 +1172,7 @@
+@@ -1179,7 +1173,7 @@
  	<target name="linux.watchdog-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
  			<entry key="osgi.bundles" operation="+"
