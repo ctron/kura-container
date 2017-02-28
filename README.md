@@ -12,4 +12,4 @@ Once the image is started you can navigate your browser to http://localhost:8080
 
 If you want to run the image with JMX enabled use the following command:
 
-    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dconagement.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false" -p 8080:8080 -p 9010:9010 ctron/kura-emulator
+    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false" -p 8080:8080 -p 9010:9010 ctron/kura-emulator
