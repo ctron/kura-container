@@ -8,6 +8,19 @@ Use the following command to run it:
 
 Once the image is started you can navigate your browser to http://localhost:8080 and log in using the credentials `admin` : `admin`.
 
+## Making use of Apache Felix File Install
+
+This image includes [Apache Felix FileInstall](https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html "Apache Felix File Install"),
+which monitors a directory and loads all OSGi bundles it detects during runtime. Adding a new bundle is as easy as dropping an OSGi JAR file into a
+directory. Uninstalling is done by deleting the file and updates are simply done by overwriting the bundle.
+
+Kura loads bundles from `/opt/eclipse/kura/load` which also defines as a docker volume, so that you can
+link this up with your container host:
+
+    docker run -ti -p 8080:8080 -v /home/user/path/to/bundles:/opt/eclipse/kura/load:z ctron/kura-emulator
+
+**Note: ** It may be that a bundle which is first installed needs to be manually started using the Kura Web UI.
+
 ## Running with JMX enabled
 
 Running with JMX or debugging enabled can sometimes be quite helpful. However it is disabled by default. 
