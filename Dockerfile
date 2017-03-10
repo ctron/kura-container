@@ -10,7 +10,7 @@ ENV \
 
 COPY kura.patch /
 
-RUN dnf -y install git java-1.8.0-openjdk-devel maven procps-ng zip unzip tar psmisc telnet dos2unix net-tools hostname && \
+RUN dnf -y update && dnf -y install git java-1.8.0-openjdk-devel maven procps-ng zip unzip tar psmisc telnet dos2unix net-tools hostname && \
     git clone https://github.com/eclipse/kura.git && cd kura && git checkout $KURA_COMMIT && \
     ( \
       cd /kura && \
