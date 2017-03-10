@@ -23,7 +23,7 @@ RUN dnf -y update && dnf -y install git java-1.8.0-openjdk-devel maven procps-ng
     /kura/kura/distrib/target/kura_3.0.0-SNAPSHOT_fedora25-nn_installer.sh && \
     dnf remove -y git java-1.8.0-openjdk-devel maven && \
     dnf install -y jre-1.8.0-openjdk-headless && \
-    rm -Rf /kura /root/.m2 && dnf -y clean all && \
+    rm -Rf /kura /root/.m2 /kura.patch && dnf -y clean all && \
     mkdir -p /opt/eclipse/kura/kura/packages && \
     cd /opt/eclipse/kura/kura/packages && \
     curl -O  https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.2.2/de.dentrassi.kura.addons.utils.fileinstall-0.2.2.dp && \
