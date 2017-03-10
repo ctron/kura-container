@@ -18,7 +18,7 @@ RUN dnf -y install git java-1.8.0-openjdk-devel maven procps-ng zip unzip tar ps
       mvn -f kura/manifest_pom.xml clean install $MAVEN_PROPS -Pspeedup && \
       git apply --verbose /kura.patch && \
       mv kura/distrib/src/main/resources/fedora25 kura/distrib/src/main/resources/fedora25-nn && \
-      mvn -f kura/distrib/pom.xml clean install $MAVEN_PROPS -Pfedora25 \
+      mvn -f kura/distrib/pom.xml clean install $MAVEN_PROPS -Pfedora25 -nsu \
     ) && \
     /kura/kura/distrib/target/kura_3.0.0-SNAPSHOT_fedora25-nn_installer.sh && \
     dnf remove -y git java-1.8.0-openjdk-devel maven && \
