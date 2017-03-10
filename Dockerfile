@@ -3,9 +3,10 @@ FROM fedora:25
 MAINTAINER Jens Reimann <jreimann@redhat.com>
 LABEL maintainer "Jens Reimann <jreimann@redhat.com>"
 
-ENV JAVA_HOME=/usr/lib/jvm/jre-1.8.0
-ENV MAVEN_PROPS=-Dmaven.test.skip=true
-ENV KURA_COMMIT=a0eb9adcf858806183b6bf869d5b614c3dbe389a
+ENV \
+  JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
+  MAVEN_PROPS=-DskipTests \
+  KURA_COMMIT=a0eb9adcf858806183b6bf869d5b614c3dbe389a
 
 COPY kura.patch /
 
