@@ -6,7 +6,7 @@ LABEL maintainer "Jens Reimann <jreimann@redhat.com>"
 ENV \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests \
-  KURA_COMMIT=0069eb044eba9ecc5115498bbeaf9575ab527f2b
+  KURA_COMMIT=ed25fcdb8523272008c71b046d17f5d9b076f927
 
 COPY kura.patch /
 
