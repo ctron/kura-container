@@ -14,7 +14,7 @@ RUN dnf -y update && dnf -y install git java-1.8.0-openjdk-devel maven procps-ng
     git clone https://github.com/eclipse/kura.git && cd kura && git checkout $KURA_COMMIT && \
     ( \
       cd /kura && \
-      mvn -f target-platform/pom.xml clean install $MAVEN_PROPS && \
+      mvn -f target-platform/pom.xml clean install $MAVEN_PROPS -Dequinox.download.url=http://dentrassi.de/download/eclipse/equinox-SDK-Neon.1.zip && \
       mvn -f kura/manifest_pom.xml clean install $MAVEN_PROPS -Pspeedup && \
       git apply --verbose /kura.patch && \
       mv kura/distrib/src/main/resources/fedora25 kura/distrib/src/main/resources/fedora25-nn && \
