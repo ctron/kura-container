@@ -54,7 +54,7 @@ The JMX port defined is 9010 and the Remote debug port is 9011.
 ## Re-Building
 
 This docker container is being built by patching Kura 3.0.0 in a way that is can be run inside
-a docekr image. For this to work, this docker build checks out a specific Kura commit, currently from
+a docker image. For this to work, this docker build checks out a specific Kura commit, currently from
 the 3.0.0 develop branch, so that the patch can be applied.
 
 If you want to re-build this image, check out this repository and simply run `docker build .`.
