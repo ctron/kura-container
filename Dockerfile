@@ -30,6 +30,8 @@ RUN dnf -y update && dnf -y install git java-1.8.0-openjdk-devel maven procps-ng
     echo "de.dentrassi.kura.addons.utils.fileinstall=file\:/opt/eclipse/kura/kura/packages/de.dentrassi.kura.addons.utils.fileinstall-0.2.2.dp" > /opt/eclipse/kura/kura/dpa.properties && \
     echo "felix.fileinstall.disableNio2=true" >> /opt/eclipse/kura/kura/config.ini && \
     mkdir /opt/eclipse/kura/load && \
+    chmod a+rw -R /opt/eclipse && \
+    find /opt/eclipse -type d | xargs chmod a+x && \
     chmod a+rwx /var/log
 
 EXPOSE 8080
