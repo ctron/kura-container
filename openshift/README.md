@@ -23,4 +23,4 @@ completely rebuild it. Once this is ready it will
 * Press "Create"
 * In the following confirmation dialog:
   * Keep the defaults
-  * Press "OK"
+  * Press "Continue"
