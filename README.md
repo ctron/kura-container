@@ -23,7 +23,7 @@ so that you can link this up with your container host:
 Now you can access `/home/user/path/to/bundles` on your host machine and bundles will be loaded
 by Kura inside the docker container.
 
-**Note: ** It may be that a bundle which is first installed needs to be manually started using the Kura Web UI.
+**Note:** It may be that a bundle which is first installed needs to be manually started using the Kura Web UI.
 
 ## Running with JMX enabled
 
