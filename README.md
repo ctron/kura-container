@@ -62,3 +62,7 @@ If you want to re-build this image, check out this repository and simply run `do
 If you want to re-base this image on another Kura commit, then you will need to change the environment
 variable in the `Dockerfile` or from the command line. If the patch no longer applies, then you will
 need to re-create or fix that patch.
+
+## Running in OpenShift
+
+There also is a [simple OpenShift template](openshift/README.md)  which can be used to deploy this image into [OpenShift](https://www.openshift.org/).
