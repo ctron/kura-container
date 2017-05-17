@@ -1,8 +1,8 @@
 diff --git a/kura/distrib/pom.xml b/kura/distrib/pom.xml
-index 164fa9e..0420200 100644
+index 50add3e..ecebb73 100644
 --- a/kura/distrib/pom.xml
 +++ b/kura/distrib/pom.xml
-@@ -2044,17 +2044,18 @@
+@@ -2032,17 +2032,18 @@
  									<target>
  										<property name="buildNumber" value="buildNumber" />
  										<property name="project.version" value="${project.version}" />
@@ -25,7 +25,7 @@ index 164fa9e..0420200 100644
  								</configuration>
  							</execution>
 diff --git a/kura/distrib/src/main/ant/build_equinox_distrib.xml b/kura/distrib/src/main/ant/build_equinox_distrib.xml
-index 3f2395f..332090f 100644
+index 4986344..845360f 100644
 --- a/kura/distrib/src/main/ant/build_equinox_distrib.xml
 +++ b/kura/distrib/src/main/ant/build_equinox_distrib.xml
 @@ -108,11 +108,10 @@
@@ -56,7 +56,7 @@ index 3f2395f..332090f 100644
          -Dtarget.device=${target.device} \
          -Declipse.ignoreApp=true \
          -Dkura.home=${DIR}/kura \
-@@ -506,27 +506,23 @@
+@@ -508,27 +508,23 @@
                          prefix="${build.output.name}/kura/plugins" />
  			<zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.core.log_${org.eclipse.kura.core.log.version}.jar"
                          prefix="${build.output.name}/kura/plugins" />
@@ -89,7 +89,7 @@ index 3f2395f..332090f 100644
                          prefix="${build.output.name}/kura/plugins" />
  		</zip>
  
-@@ -1145,11 +1141,11 @@
+@@ -1147,11 +1143,11 @@
  	</target>
  	
  	<target name="linux.clock-config">
@@ -102,7 +102,7 @@ index 3f2395f..332090f 100644
  	
  	<target name="linux.command-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
-@@ -1159,20 +1155,18 @@
+@@ -1161,20 +1157,18 @@
  	</target>	
  	
  	<target name="linux.position-config">
@@ -125,7 +125,7 @@ index 3f2395f..332090f 100644
  	
  	<target name="linux.bluetooth-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
-@@ -1182,11 +1176,11 @@
+@@ -1184,11 +1178,11 @@
  	</target>
  	
  	<target name="linux.watchdog-config">
@@ -156,7 +156,7 @@ index 9bb2265..b23fcb9 100644
  # os.version= Fetch from Java
  os.distribution=Fedora
 diff --git a/kura/distrib/src/main/resources/fedora25/kura_install.sh b/kura/distrib/src/main/resources/fedora25/kura_install.sh
-index 48a5a5f..2a49d20 100755
+index 25f5b62..e4402d4 100755
 --- a/kura/distrib/src/main/resources/fedora25/kura_install.sh
 +++ b/kura/distrib/src/main/resources/fedora25/kura_install.sh
 @@ -16,78 +16,78 @@
@@ -243,14 +243,14 @@ index 48a5a5f..2a49d20 100755
  
  OLD_PATH=$(pwd)
 -SELINUX_KURA=$(semodule -l | grep selinuxKura)
--if [ -z $SELINUX_KURA ]; then
+-if [ -z "$SELINUX_KURA" ]; then
 -	echo "Applying semodule..."
 -	cd ${INSTALL_DIR}/kura/install/
 -    semodule -i selinuxKura.pp
 -    cd ${OLD_PATH}
 -fi
 +#SELINUX_KURA=$(semodule -l | grep selinuxKura)
-+#if [ -z $SELINUX_KURA ]; then
++#if [ -z "$SELINUX_KURA" ]; then
 +#	echo "Applying semodule..."
 +#	cd ${INSTALL_DIR}/kura/install/
 +#    semodule -i selinuxKura.pp
@@ -295,7 +295,6 @@ index 48a5a5f..2a49d20 100755
 - 	sysctl -w net.ipv6.conf.${INTERFACE}.disable_ipv6=1
 - done
 -fi
-\ No newline at end of file
 +#if ! [ -d /sys/class/net ]
 +#then
 +# sysctl -p || true

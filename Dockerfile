@@ -6,7 +6,7 @@ LABEL maintainer "Jens Reimann <jreimann@redhat.com>"
 ENV \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests \
-  KURA_COMMIT=e47ab6ee82cbc31be299e693feb3f9b5288372c5
+  KURA_COMMIT=2f7ce1e3fa3b33db5d9e7623c676d34c727709d4
 
 COPY kura.patch /
 
@@ -14,13 +14,13 @@ RUN dnf -y update && dnf -y install git java-1.8.0-openjdk-devel maven procps-ng
     git clone https://github.com/eclipse/kura.git && cd kura && git checkout $KURA_COMMIT && \
     ( \
       cd /kura && \
+      git apply --verbose /kura.patch && \
       mvn -B -f target-platform/pom.xml clean install $MAVEN_PROPS -Dequinox.download.url=http://dentrassi.de/download/eclipse/equinox-SDK-Neon.1.zip && \
       mvn -B -f kura/manifest_pom.xml clean install $MAVEN_PROPS -Pspeedup && \
-      git apply --verbose /kura.patch && \
       mv kura/distrib/src/main/resources/fedora25 kura/distrib/src/main/resources/fedora25-nn && \
       mvn -B -f kura/distrib/pom.xml clean install $MAVEN_PROPS -Pfedora25 -nsu \
     ) && \
-    /kura/kura/distrib/target/kura_3.0.0-SNAPSHOT_fedora25-nn_installer.sh && \
+    /kura/kura/distrib/target/kura_3.0.0_fedora25-nn_installer.sh && \
     dnf remove -y git java-1.8.0-openjdk-devel maven && \
     dnf install -y jre-1.8.0-openjdk-headless && \
     rm -Rf /kura /root/.m2 /kura.patch && dnf -y clean all && \
