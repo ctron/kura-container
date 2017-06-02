@@ -66,3 +66,10 @@ need to re-create or fix that patch.
 ## Running in OpenShift
 
 There also is a [simple OpenShift template](openshift/README.md)  which can be used to deploy this image into [OpenShift](https://www.openshift.org/).
+
+## Building extended images
+
+If you want to add additional content to the Kura installation inside the docker image,
+it is possible to extend the installation.
+
+Also see: [extensions/artemis/README.md](extensions/artemis/README.md)
