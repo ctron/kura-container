@@ -1,0 +1,130 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: kura-emulator-template
+  annotations:
+    description: "Eclipse Kura™ emulator instance with Artemis"
+    iconClass: "pficon-virtual-machine"
+    tags: "iot"
+
+# Parameters
+
+parameters:
+- name:         GIT_BRANCH
+  description:     GitHub branch
+  value:           master
+
+objects:
+
+# Build configuration
+
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: kura-emulator-artemis
+
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: kura-emulator-artemis-build
+  spec:
+    triggers: 
+      - type: ImageChange
+      - type: ConfigChange
+    source: 
+      type: Git
+      git:
+        uri: https://github.com/ctron/kura-emulator
+        ref: ${GIT_BRANCH}
+      contextDir: extensions/artemis
+    strategy: 
+      type: Docker
+      dockerStrategy:
+    postCommit:
+    output: 
+      to:
+        kind: ImageStreamTag
+        name: kura-emulator-artemis:latest
+
+# Service
+
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: kura-emulator-artemis
+  spec:
+    replicas: 1
+    selector:
+      app: kura-emulator-artemis
+      deploymentconfig: kura-emulator-artemis
+    strategy:
+      type: Recreate
+    triggers:
+      - type: ConfigChange 
+      - type: ImageChange 
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - kura-emulator-artemis
+          from:
+            kind: ImageStreamTag
+            name: kura-emulator-artemis:latest
+    template:
+      metadata:
+        labels:
+          app: kura-emulator-artemis
+          deploymentconfig: kura-emulator-artemis
+      spec:
+        containers:
+        - image: kura-emulator-artemis
+          imagePullPolicy: Always
+          name: kura-emulator-artemis
+          ports:
+          - containerPort: 1883
+            name: mqtt
+          - containerPort: 5672
+            name: amqp
+          - containerPort: 8080
+            name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 5
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: kura-emulator
+    labels:
+      app: kura-emulator
+  spec:
+    ports:
+    - name: mqtt
+      protocol: TCP
+      port: 1883
+    - name: amqp
+      protocol: TCP
+      port: 5672
+    - name: http
+      protocol: TCP
+      port: 8080
+    selector:
+      app: kura-emulator
+      deploymentconfig: kura-emulator
+
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: console
+    labels:
+      app: kura-emulator-artemis
+  spec:
+    to:
+      kind: Service
+      name: kura-emulator-artemis
+    port:
+      targetPort: http
