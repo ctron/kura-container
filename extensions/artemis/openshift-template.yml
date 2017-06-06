@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: kura-emulator-template
+  name: kura-emulator-artemis-template
   annotations:
     description: "Eclipse Kura™ emulator instance with Artemis"
     iconClass: "pficon-virtual-machine"
@@ -98,9 +98,9 @@ objects:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: kura-emulator
+    name: kura-emulator-artemis
     labels:
-      app: kura-emulator
+      app: kura-emulator-artemis
   spec:
     ports:
     - name: mqtt
@@ -113,8 +113,8 @@ objects:
       protocol: TCP
       port: 8080
     selector:
-      app: kura-emulator
-      deploymentconfig: kura-emulator
+      app: kura-emulator-artemis
+      deploymentconfig: kura-emulator-artemis
 
 - kind: Route
   apiVersion: v1
