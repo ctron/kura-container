@@ -306,3 +306,20 @@ index 25f5b62..e4402d4 100755
 +# 	sysctl -w net.ipv6.conf.${INTERFACE}.disable_ipv6=1
 +# done
 +#fi
+diff --git a/kura/manifest_pom.xml b/kura/manifest_pom.xml
+index f835fc9..7bd29ff 100644
+--- a/kura/manifest_pom.xml
++++ b/kura/manifest_pom.xml
+@@ -118,11 +118,11 @@
+         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+         <sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
+ 
+         <!-- BND baseline plugin -->
+-        <bnd.baseline.version>3.4.0-SNAPSHOT</bnd.baseline.version>
++        <bnd.baseline.version>3.4.0</bnd.baseline.version>
+         <bnd.baseline.continueOnError>false</bnd.baseline.continueOnError>
+     </properties>
+ 
+     <distributionManagement>
+         <repository>
