@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE xml>
 <!--
 
     Copyright (c) 2017 Eurotech and/or its affiliates and others
@@ -184,46 +183,46 @@
     <esf:configuration pid="de.dentrassi.kura.artemis.server.ServiceComponent">
         <esf:properties>
             <esf:property name="brokerXml" array="false" encrypted="false" type="String">
-                <esf:value>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;
-&#13;
-&lt;configuration xmlns=&quot;urn:activemq&quot;&#13;
-    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&#13;
-    xsi:schemaLocation=&quot;&#13;
-    urn:activemq https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-server/src/main/resources/schema/artemis-server.xsd&#13;
-    urn:activemq:core https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-server/src/main/resources/schema/artemis-configuration.xsd&#13;
-    urn:activemq:jms https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-jms-server/src/main/resources/schema/artemis-jms.xsd&#13;
-    &quot;&gt;&#13;
-&#13;
-    &lt;core xmlns=&quot;urn:activemq:core&quot;&gt;&#13;
-        &lt;persistence-enabled&gt;false&lt;/persistence-enabled&gt;&#13;
-        &#13;
-        &lt;acceptors&gt;&#13;
-            &lt;acceptor name=&quot;netty-acceptor&quot;&gt;tcp://0.0.0.0:61616&lt;/acceptor&gt;&#13;
-            &lt;acceptor name=&quot;amqp-acceptor&quot;&gt;tcp://0.0.0.0:5672?protocols=AMQP&lt;/acceptor&gt;&#13;
-            &lt;acceptor name=&quot;mqtt-acceptor&quot;&gt;tcp://0.0.0.0:1883?protocols=MQTT&lt;/acceptor&gt;&#13;
-        &lt;/acceptors&gt;&#13;
-        &#13;
-        &lt;resolve-protocols&gt;false&lt;/resolve-protocols&gt;&#13;
-        &#13;
-        &lt;security-settings&gt;&#13;
-            &lt;!-- WARNING: this is only for testing and completely insecure --&gt;&#13;
-            &lt;security-setting match=&quot;#&quot;&gt;&#13;
-                &lt;permission type=&quot;createDurableQueue&quot; roles=&quot;guest&quot;/&gt;&#13;
-                &lt;permission type=&quot;deleteDurableQueue&quot; roles=&quot;guest&quot;/&gt;&#13;
-                &lt;permission type=&quot;createNonDurableQueue&quot; roles=&quot;guest&quot;/&gt;&#13;
-                &lt;permission type=&quot;deleteNonDurableQueue&quot; roles=&quot;guest&quot;/&gt;&#13;
-                &lt;permission type=&quot;consume&quot; roles=&quot;guest&quot;/&gt;&#13;
-                &lt;permission type=&quot;send&quot; roles=&quot;guest&quot;/&gt;&#13;
-            &lt;/security-setting&gt;&#13;
-        &lt;/security-settings&gt;&#13;
-&#13;
-    &lt;/core&gt;&#13;
-&#13;
-    &lt;jms xmlns=&quot;urn:activemq:jms&quot;&gt;&#13;
-        &lt;topic name=&quot;TEST.T.1&quot; /&gt;&#13;
-    &lt;/jms&gt;&#13;
-&#13;
-&lt;/configuration&gt;&#13;</esf:value>
+                <esf:value><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration xmlns="urn:activemq"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    urn:activemq https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-server/src/main/resources/schema/artemis-server.xsd
+    urn:activemq:core https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-server/src/main/resources/schema/artemis-configuration.xsd
+    urn:activemq:jms https://raw.githubusercontent.com/apache/activemq-artemis/master/artemis-jms-server/src/main/resources/schema/artemis-jms.xsd
+    ">
+
+    <core xmlns="urn:activemq:core">
+        <persistence-enabled>false</persistence-enabled>
+        
+        <acceptors>
+            <acceptor name="netty-acceptor">tcp://0.0.0.0:61616</acceptor>
+            <acceptor name="amqp-acceptor">tcp://0.0.0.0:5672?protocols=AMQP</acceptor>
+            <acceptor name="mqtt-acceptor">tcp://0.0.0.0:1883?protocols=MQTT</acceptor>
+        </acceptors>
+        
+        <resolve-protocols>false</resolve-protocols>
+        
+        <security-settings>
+            <!-- WARNING: this is only for testing and completely insecure -->
+            <security-setting match="#">
+                <permission type="createDurableQueue" roles="guest"/>
+                <permission type="deleteDurableQueue" roles="guest"/>
+                <permission type="createNonDurableQueue" roles="guest"/>
+                <permission type="deleteNonDurableQueue" roles="guest"/>
+                <permission type="consume" roles="guest"/>
+                <permission type="send" roles="guest"/>
+            </security-setting>
+        </security-settings>
+
+    </core>
+
+    <jms xmlns="urn:activemq:jms">
+        <topic name="TEST.T.1" />
+    </jms>
+
+</configuration>]]></esf:value>
             </esf:property>
             <esf:property name="requiredProtocols" array="false" encrypted="false" type="String">
                 <esf:value>AMQP, MQTT</esf:value>
