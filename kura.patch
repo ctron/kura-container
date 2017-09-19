@@ -1,34 +1,46 @@
 diff --git a/kura/distrib/pom.xml b/kura/distrib/pom.xml
-index 50add3e..ecebb73 100644
+index cef4600..00b59ea 100644
 --- a/kura/distrib/pom.xml
 +++ b/kura/distrib/pom.xml
-@@ -2032,17 +2032,18 @@
- 									<target>
- 										<property name="buildNumber" value="buildNumber" />
- 										<property name="project.version" value="${project.version}" />
- 										<property name="project.build.profile" value="${project.build.profile}" />
- 										<property name="project.build.directory" value="${project.build.directory}" />
--										<property name="build.name" value="fedora25" />
-+										<property name="build.name" value="fedora25-nn" />
- 										<property name="target.device" value="raspberry-pi" />
--										<property name="native.tag" value="armv6hf"/>
-+										<property name="native.tag" value="x86_64"/>
- 										<property name="kura.os.version" value="fedora" />
--										<property name="kura.arch" value="armv7_hf" />
-+										<property name="kura.arch" value="x86_64" />
- 										<property name="kura.mem.size" value="512m" />
- 										<property name="kura.install.dir" value="/opt/eclipse" />
-+										<property name="http.port" value="8080"/>
- 										<ant antfile="${basedir}/src/main/ant/build_equinox_distrib.xml"
- 											target="dist-linux" />
- 									</target>
- 								</configuration>
- 							</execution>
+@@ -1961,17 +1961,18 @@
+                                     <target>
+                                         <property name="buildNumber" value="buildNumber" />
+                                         <property name="project.version" value="${project.version}" />
+                                         <property name="project.build.profile" value="${project.build.profile}" />
+                                         <property name="project.build.directory" value="${project.build.directory}" />
+-                                        <property name="build.name" value="fedora" />
++                                        <property name="build.name" value="fedora-nn" />
+                                         <property name="target.device" value="raspberry-pi" />
+-                                        <property name="native.tag" value="armv6hf" />
++                                        <property name="native.tag" value="x86_64" />
+                                         <property name="kura.os.version" value="fedora" />
+-                                        <property name="kura.arch" value="armv7_hf" />
++                                        <property name="kura.arch" value="x86_64" />
+                                         <property name="kura.mem.size" value="512m" />
+                                         <property name="kura.install.dir" value="/opt/eclipse" />
++                                        <property name="http.port" value="8080" />
+                                         <ant antfile="${basedir}/src/main/ant/build_equinox_distrib.xml" target="dist-linux" />
+                                     </target>
+                                 </configuration>
+                             </execution>
+                         </executions>
+@@ -1983,11 +1984,10 @@
+                         <executions>
+                             <execution> 
+                                 <id>fedora-rpm</id>
+                                 <phase>package</phase>
+                                 <goals>
+-                                    <goal>rpm</goal>
+                                 </goals>
+                                 <configuration>
+                                     <packageName>kura-fedora</packageName>
+                                     <attach>true</attach>
+                                     <group>Application/Misc</group>
 diff --git a/kura/distrib/src/main/ant/build_equinox_distrib.xml b/kura/distrib/src/main/ant/build_equinox_distrib.xml
-index 4986344..845360f 100644
+index 423e292..2100693 100644
 --- a/kura/distrib/src/main/ant/build_equinox_distrib.xml
 +++ b/kura/distrib/src/main/ant/build_equinox_distrib.xml
-@@ -108,11 +108,10 @@
+@@ -104,11 +104,10 @@
  		<antcall target="deployment.agent-config" />
  		<antcall target="linux.clock-config" />
  		<antcall target="linux.command-config" />
@@ -36,18 +48,14 @@ index 4986344..845360f 100644
  		<antcall target="linux.usb-config" />
 -		<antcall target="linux.bluetooth-config" />
  		<antcall target="linux.watchdog-config" />
- 		
- 		
+ 
+ 
  		<!-- Added Camel bundles configs -->
  		<antcall target="camel-config" />
-@@ -169,13 +168,14 @@
- cp ${DIR}/kura/config.ini /tmp/.kura/configuration/
- 
- KURA_RUNNING=`ps ax | grep java | grep "org.eclipse.osgi"`
+@@ -183,10 +182,11 @@
  
  if [ -z "$KURA_RUNNING" ] ; then
--        java -Xms${kura.mem.size} -Xmx${kura.mem.size} \
-+        exec java -Xms${kura.mem.size} -Xmx${kura.mem.size} \
+         exec java -Xms${kura.mem.size} -Xmx${kura.mem.size} \
          -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/var/log/kura-heapdump.hprof \
          -XX:ErrorFile=/var/log/kura-error.log \
 +        ${JAVA_OPTS} \
@@ -56,7 +64,7 @@ index 4986344..845360f 100644
          -Dtarget.device=${target.device} \
          -Declipse.ignoreApp=true \
          -Dkura.home=${DIR}/kura \
-@@ -508,27 +508,23 @@
+@@ -505,33 +505,23 @@
                          prefix="${build.output.name}/kura/plugins" />
  			<zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.core.log_${org.eclipse.kura.core.log.version}.jar"
                          prefix="${build.output.name}/kura/plugins" />
@@ -77,6 +85,12 @@ index 4986344..845360f 100644
 -                        prefix="${build.output.name}/kura/plugins" />
 -			<zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.linux.bluetooth_${org.eclipse.kura.linux.bluetooth.version}.jar"
 -                        prefix="${build.output.name}/kura/plugins" />
+-	        <zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.ble.provider_${org.eclipse.kura.ble.provider.version}.jar"
+-	                        prefix="${build.output.name}/kura/plugins" />
+-            <zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.ble.ibeacon.provider_${org.eclipse.kura.ble.ibeacon.provider.version}.jar"
+-                            prefix="${build.output.name}/kura/plugins" />
+-            <zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.ble.eddystone.provider_${org.eclipse.kura.ble.eddystone.provider.version}.jar"
+-                            prefix="${build.output.name}/kura/plugins" />
 -			<zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.linux.watchdog_${org.eclipse.kura.linux.watchdog.version}.jar"
 +			<zipfileset file="${project.build.directory}/plugins/org.eclipse.kura.emulator.watchdog_${org.eclipse.kura.emulator.watchdog.version}.jar"
                          prefix="${build.output.name}/kura/plugins" />
@@ -89,9 +103,36 @@ index 4986344..845360f 100644
                          prefix="${build.output.name}/kura/plugins" />
  		</zip>
  
-@@ -1147,11 +1143,11 @@
+@@ -553,11 +543,10 @@
+ 		<antcall target="web2-jar" />
+ 		<antcall target="gpio-jar" />
+ 		<antcall target="emulator-gpio-jar" />
+ 		<antcall target="emulator-jars" />
+ 		<antcall target="linux-jars" />
+-		<antcall target="tinyb-jars" />
+ 
+ 		<echo message="Building Kura Distribution for ${build.name}-jars..." />
+ 
+ 		<!-- Create installer script -->
+ 		<echo message="Creating Installer for ${build.name}  ${kura.install.dir}" />
+@@ -1037,14 +1026,10 @@
+ 				value=", reference:file:${kura.install.dir}/kura/plugins/usb4java-javax_${usb4java-javax.version}.jar@4:start" />
+ 			<entry key="osgi.bundles" operation="+"
+                 value=", reference:file:${kura.install.dir}/kura/plugins/jdk.dio.${native.tag}_${jdk.dio.version}.jar@3" />
+ 			<entry key="osgi.bundles" operation="+"
+ 				value=", reference:file:${kura.install.dir}/kura/plugins/jdk.dio_${jdk.dio.version}.jar@3" />
+-	        <entry key="osgi.bundles" operation="+"
+-	            value=", reference:file:${kura.install.dir}/kura/plugins/tinyb.${native.tag}_${tinyb.version}.jar@3" />
+-	        <entry key="osgi.bundles" operation="+"
+-	            value=", reference:file:${kura.install.dir}/kura/plugins/tinyb_${tinyb.version}.jar@3:start" />
+ 			<entry key="osgi.bundles" operation="+"
+ 				value=", reference:file:${kura.install.dir}/kura/plugins/org.apache.commons.net_${org.apache.commons.net.version}.jar@3:start" />
+ 			<entry key="osgi.bundles" operation="+"
+                 value=", reference:file:${kura.install.dir}/kura/plugins/org.apache.commons.exec_${org.apache.commons.exec.version}.jar" />
+ 			<entry key="osgi.bundles" operation="+"
+@@ -1140,11 +1125,11 @@
  	</target>
- 	
+ 
  	<target name="linux.clock-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
  			<entry key="osgi.bundles" operation="+"
@@ -99,19 +140,19 @@ index 4986344..845360f 100644
 +				value=", reference:file:${kura.install.dir}/kura/kura/plugins/org.eclipse.kura.emulator.clock_${org.eclipse.kura.emulator.clock.version}.jar@4" />
  		</propertyfile>
  	</target>
- 	
+ 
  	<target name="linux.command-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
-@@ -1161,20 +1157,18 @@
- 	</target>	
- 	
+@@ -1154,20 +1139,18 @@
+ 	</target>
+ 
  	<target name="linux.position-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
  			<entry key="osgi.bundles" operation="+"
 -			     value=", reference:file:${kura.install.dir}/kura/kura/plugins/org.eclipse.kura.linux.position_${org.eclipse.kura.linux.position.version}.jar@4" />
 +			     value=", reference:file:${kura.install.dir}/kura/kura/plugins/org.eclipse.kura.emulator.position_${org.eclipse.kura.emulator.position.version}.jar@4" />
  		</propertyfile>
- 	</target>	
+ 	</target>
  
  	<target name="linux.usb-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
@@ -122,12 +163,12 @@ index 4986344..845360f 100644
 +			     value=", reference:file:${kura.install.dir}/kura/kura/plugins/org.eclipse.kura.emulator.usb_${org.eclipse.kura.emulator.usb.version}.jar@4" />
  		</propertyfile>
  	</target>
- 	
+ 
  	<target name="linux.bluetooth-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
-@@ -1184,11 +1178,11 @@
+@@ -1183,11 +1166,11 @@
  	</target>
- 	
+ 
  	<target name="linux.watchdog-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
  			<entry key="osgi.bundles" operation="+"
@@ -135,14 +176,14 @@ index 4986344..845360f 100644
 +		          value=", reference:file:${kura.install.dir}/kura/kura/plugins/org.eclipse.kura.emulator.watchdog_${org.eclipse.kura.emulator.watchdog.version}.jar@4" />
  		</propertyfile>
  	</target>
- 	
+ 
  	<target name="core.status-config">
  		<propertyfile file="${project.build.directory}/${build.output.name}/config.ini">
-diff --git a/kura/distrib/src/main/resources/fedora25/kura.properties b/kura/distrib/src/main/resources/fedora25/kura.properties
-index 9bb2265..b23fcb9 100644
---- a/kura/distrib/src/main/resources/fedora25/kura.properties
-+++ b/kura/distrib/src/main/resources/fedora25/kura.properties
-@@ -33,11 +33,11 @@
+diff --git a/kura/distrib/src/main/resources/fedora/kura.properties b/kura/distrib/src/main/resources/fedora/kura.properties
+index aa9d750..42b268b 100644
+--- a/kura/distrib/src/main/resources/fedora/kura.properties
++++ b/kura/distrib/src/main/resources/fedora/kura.properties
+@@ -34,11 +34,11 @@
  kura.packages={kura.install.dir}/kura/kura/packages
  kura.data={kura.install.dir}/kura/data
  kura.tmp=/tmp/.kura
@@ -155,10 +196,10 @@ index 9bb2265..b23fcb9 100644
  # os.name= Fetch from Java
  # os.version= Fetch from Java
  os.distribution=Fedora
-diff --git a/kura/distrib/src/main/resources/fedora25/kura_install.sh b/kura/distrib/src/main/resources/fedora25/kura_install.sh
+diff --git a/kura/distrib/src/main/resources/fedora/kura_install.sh b/kura/distrib/src/main/resources/fedora/kura_install.sh
 index 25f5b62..e4402d4 100755
---- a/kura/distrib/src/main/resources/fedora25/kura_install.sh
-+++ b/kura/distrib/src/main/resources/fedora25/kura_install.sh
+--- a/kura/distrib/src/main/resources/fedora/kura_install.sh
++++ b/kura/distrib/src/main/resources/fedora/kura_install.sh
 @@ -16,78 +16,78 @@
  
  #create known kura install location
@@ -306,20 +347,3 @@ index 25f5b62..e4402d4 100755
 +# 	sysctl -w net.ipv6.conf.${INTERFACE}.disable_ipv6=1
 +# done
 +#fi
-diff --git a/kura/manifest_pom.xml b/kura/manifest_pom.xml
-index f835fc9..7bd29ff 100644
---- a/kura/manifest_pom.xml
-+++ b/kura/manifest_pom.xml
-@@ -118,11 +118,11 @@
-         <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-         <sonar.jacoco.reportPath>target/jacoco.exec</sonar.jacoco.reportPath>
- 
-         <!-- BND baseline plugin -->
--        <bnd.baseline.version>3.4.0-SNAPSHOT</bnd.baseline.version>
-+        <bnd.baseline.version>3.4.0</bnd.baseline.version>
-         <bnd.baseline.continueOnError>false</bnd.baseline.continueOnError>
-     </properties>
- 
-     <distributionManagement>
-         <repository>
