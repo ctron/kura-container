@@ -8,6 +8,10 @@ a default component to the Kura emulator instance.
 In addition the image is seeded with a new default configuration, containing a configuration for the broker
 which enables AMQP and MQTT support.
 
+**Note:** As Artemis comes as part of Kura now this example isn't no longer necessary
+to provide support for a broker in Kura. However the example still is valid showing
+how the emulator image can be extended with additional functionality.
+
 ## Connecting
 
 By default this broker exports via MQTT and AMQP. MQTT is on port 1883, AMQP on port 5672.
