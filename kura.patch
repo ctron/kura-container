@@ -1,5 +1,5 @@
 diff --git a/kura/distrib/pom.xml b/kura/distrib/pom.xml
-index cef4600..00b59ea 100644
+index 3008ded..95b026d 100644
 --- a/kura/distrib/pom.xml
 +++ b/kura/distrib/pom.xml
 @@ -1961,17 +1961,18 @@
@@ -37,7 +37,7 @@ index cef4600..00b59ea 100644
                                      <attach>true</attach>
                                      <group>Application/Misc</group>
 diff --git a/kura/distrib/src/main/ant/build_equinox_distrib.xml b/kura/distrib/src/main/ant/build_equinox_distrib.xml
-index 423e292..2100693 100644
+index 81fc02e..e206cb2 100644
 --- a/kura/distrib/src/main/ant/build_equinox_distrib.xml
 +++ b/kura/distrib/src/main/ant/build_equinox_distrib.xml
 @@ -104,11 +104,10 @@
@@ -347,3 +347,65 @@ index 25f5b62..e4402d4 100755
 +# 	sysctl -w net.ipv6.conf.${INTERFACE}.disable_ipv6=1
 +# done
 +#fi
+diff --git a/kura/pom.xml b/kura/pom.xml
+index ffdf496..63aef1a 100644
+--- a/kura/pom.xml
++++ b/kura/pom.xml
+@@ -565,26 +565,10 @@
+                             </target>
+                         </configuration>
+                     </execution>
+                 </executions>
+             </plugin>
+-            <plugin>
+-                <groupId>org.honton.chas</groupId>
+-                <artifactId>exists-maven-plugin</artifactId>
+-                <version>0.0.3</version>
+-                <executions>
+-                    <execution>
+-                        <goals>
+-                            <goal>remote</goal>
+-                        </goals>
+-                        <configuration>
+-                            <skipIfSnapshot>true</skipIfSnapshot>
+-                            <failIfExists>true</failIfExists>
+-                        </configuration>
+-                    </execution>
+-                </executions>
+-            </plugin>
+         </plugins>
+         <pluginManagement>
+             <plugins>
+                 <plugin>
+                     <groupId>org.eclipse.tycho</groupId>
+diff --git a/target-platform/pom.xml b/target-platform/pom.xml
+index 40a8e20..bcae5ec 100644
+--- a/target-platform/pom.xml
++++ b/target-platform/pom.xml
+@@ -115,26 +115,10 @@
+                             <goal>check</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+             </plugin>
+-            <plugin>
+-                <groupId>org.honton.chas</groupId>
+-                <artifactId>exists-maven-plugin</artifactId>
+-                <version>0.0.3</version>
+-                <executions>
+-                    <execution>
+-                        <goals>
+-                            <goal>remote</goal>
+-                        </goals>
+-                        <configuration>
+-                            <skipIfSnapshot>true</skipIfSnapshot>
+-                            <failIfExists>true</failIfExists>
+-                        </configuration>
+-                    </execution>
+-                </executions>
+-            </plugin>
+         </plugins>
+ 
+         <pluginManagement>
+             <plugins>
+                 <plugin>
