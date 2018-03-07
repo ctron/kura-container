@@ -33,13 +33,13 @@ Running with JMX or debugging enabled can sometimes be quite helpful. However it
 
 If you want to run the image with JMX enabled use the following command on Linux:
 
-    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -Xrunjdwp:transport=dt_socket,address=9011,server=y,suspend=n" -p 8080:8080 -p 9010:9010 -p 9011:9011 ctron/kura-emulator
+    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -Xrunjdwp:transport=dt_socket,address=9011,server=y,suspend=n" -p 8080:8080 --expose 9010 --expose 9011 -p 9010:9010 -p 9011:9011 ctron/kura-emulator
 
 ### On Windows
 
 If you want to run the image with JMX enabled use the following command on Windows: 
 
-    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Djava.rmi.server.hostname=<IP> -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -Xrunjdwp:transport=dt_socket,address=9011,server=y,suspend=n" -p 8080:8080 -p 9010:9010 -p 9011:9011 ctron/kura-emulator
+    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Djava.rmi.server.hostname=<IP> -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -Xrunjdwp:transport=dt_socket,address=9011,server=y,suspend=n" -p 8080:8080 --expose 9010 --expose 9011 -p 9010:9010 -p 9011:9011 ctron/kura-emulator
 
 Where *\<IP\>* is the Docker address, you can find it by using *ipconfig* and search for *DockerNAT* address, for instance:
 
@@ -49,7 +49,7 @@ Where *\<IP\>* is the Docker address, you can find it by using *ipconfig* and se
     Subnet Mask . . . . . . . . . . . : 255.255.255.0
     Default Gateway . . . . . . . . . :
     
-The JMX port defined is 9010 and the Remote debug port is 9011.
+The JMX port defined is 9010 and the Remote debug port is 9011. Both ports are not exposed by default and have to be exposed from the command line using `--expose 9010 --expose 9011`.
 
 ## Re-Building
 
