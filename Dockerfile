@@ -1,4 +1,4 @@
-FROM fedora:26
+FROM fedora:27
 
 MAINTAINER Jens Reimann <jreimann@redhat.com>
 LABEL maintainer "Jens Reimann <jreimann@redhat.com>"
@@ -6,7 +6,7 @@ LABEL maintainer "Jens Reimann <jreimann@redhat.com>"
 ENV \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests \
-  KURA_COMMIT=bab9ab3cb55e79501d18654a68a9f1b54748ae0d
+  KURA_COMMIT=9876db40200acda68ca3acf55312b23dd780ea9b
 
 COPY kura.patch /
 
@@ -20,7 +20,7 @@ RUN dnf -y update && dnf -y install git java-1.8.0-openjdk-devel maven procps-ng
       mv kura/distrib/src/main/resources/fedora kura/distrib/src/main/resources/fedora-nn && \
       mvn -B -f kura/distrib/pom.xml clean install $MAVEN_PROPS -Pfedora -nsu \
     ) && \
-    /kura/kura/distrib/target/kura_3.1.0_fedora-nn_installer.sh && \
+    /kura/kura/distrib/target/kura_3.2.0_fedora-nn_installer.sh && \
     dnf remove -y git java-1.8.0-openjdk-devel maven && \
     dnf install -y jre-1.8.0-openjdk-headless && \
     rm -Rf /kura /root/.m2 /kura.patch && dnf -y clean all && \
