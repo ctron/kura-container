@@ -53,15 +53,14 @@ The JMX port defined is 9010 and the Remote debug port is 9011. Both ports are n
 
 ## Re-Building
 
-This docker container is being built by patching Kura 3.0.0 in a way that is can be run inside
-a docker image. For this to work, this docker build checks out a specific Kura commit, currently from
-the 3.0.0 develop branch, so that the patch can be applied.
+This docker container is being built by re-using the Intel UP² CentOS 7 image of Kura.
+It makes a few adjustments to the Kura sources and performs a full build from a specified
+Git commit of Kura.
 
 If you want to re-build this image, check out this repository and simply run `docker build .`.
 
 If you want to re-base this image on another Kura commit, then you will need to change the environment
-variable in the `Dockerfile` or from the command line. If the patch no longer applies, then you will
-need to re-create or fix that patch.
+variable in the `Dockerfile` or from the command line.
 
 ## Running in OpenShift
 
