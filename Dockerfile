@@ -6,10 +6,10 @@ LABEL maintainer "Jens Reimann <jreimann@redhat.com>" \
       io.openshift.non-scalable true
 
 ENV \
-  GIT_REPO=https://github.com/ctron/kura.git \
+  GIT_REPO=https://github.com/eclipse/kura.git \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests \
-  KURA_COMMIT=fc52de461627d4bf473589b398e1c39847ba26d2
+  KURA_COMMIT=450b4f5f16838f051135fefb0cbda94e0cdff281
 
 RUN yum -y update && \
     yum -y install scl-utils scl-utils-build centos-release-scl && \
