@@ -34,7 +34,7 @@ and on the machine you will be using.
 ### Command line
 
 Issue the following commands from your command line of choice. Please
-not that need to have the
+note that need to have the
 [OpenShift CLI installed](https://docs.openshift.org/latest/cli_reference/get_started_cli.html) installed
 and you need to be logged in to your OpenShift cluster with `oc login`.
 
