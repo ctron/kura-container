@@ -18,11 +18,13 @@ parameters:
                    This is not the branch to pull the Kura sources from.
 - name:         KURA_GIT_URI
   displayName:     Kura Git repository
-  required:        true
+  required:        false
 - name:         KURA_GIT_BRANCH
   displayName:     Kura Git Branch
+  required:        false
 - name:         KURA_COMMIT
-  displayName:     Commit of Kura to build
+  displayName:     Kura commit to build
+  required:        false
 
 objects:
 
