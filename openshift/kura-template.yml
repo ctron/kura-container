@@ -11,8 +11,18 @@ metadata:
 
 parameters:
 - name:         GIT_BRANCH
-  description:     GitHub branch
+  displayName:     Git branch
   value:           master
+  required:        true
+  description:     The branch from where to pull the files for building the Kura emulator.
+                   This is not the branch to pull the Kura sources from.
+- name:         KURA_GIT_URI
+  displayName:     Kura Git repository
+  required:        true
+- name:         KURA_GIT_BRANCH
+  displayName:     Kura Git Branch
+- name:         KURA_COMMIT
+  displayName:     Commit of Kura to build
 
 objects:
 
@@ -39,6 +49,13 @@ objects:
     strategy: 
       type: Docker
       dockerStrategy:
+        env:
+          - name: GIT_REPO
+            value: ${KURA_GIT_URI}
+          - name: GIT_BRANCH
+            value: ${KURA_GIT_BRANCH}
+          - name: KURA_COMMIT
+            value: ${KURA_COMMIT}
     postCommit:
     output: 
       to:
