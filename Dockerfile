@@ -7,14 +7,15 @@ LABEL maintainer "Jens Reimann <jreimann@redhat.com>" \
 
 ENV \
   GIT_REPO=https://github.com/eclipse/kura.git \
+  GIT_BRANCH=develop \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests \
-  KURA_COMMIT=450b4f5f16838f051135fefb0cbda94e0cdff281
+  KURA_COMMIT=24efd0dffe1ca0a816d8da2832223c62e961fc7a
 
 RUN yum -y update && \
     yum -y install scl-utils scl-utils-build centos-release-scl && \
     yum -y install git java-1.8.0-openjdk-devel rh-maven35 && \
-    git clone "$GIT_REPO" && cd kura && git checkout $KURA_COMMIT && \
+    git clone "$GIT_REPO" -b "$GIT_BRANCH" && cd kura && git checkout $KURA_COMMIT && \
     ( \
       cd /kura && \
       `# Replace broken 'nn' script` \
