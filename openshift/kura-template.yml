@@ -137,3 +137,5 @@ objects:
       name: kura-emulator
     port:
       targetPort: http
+    tls:
+      termination: edge
