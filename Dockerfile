@@ -6,13 +6,18 @@ LABEL maintainer="Jens Reimann <jreimann@redhat.com>" \
       io.openshift.non-scalable=true
 
 ENV \
-  GIT_REPO=https://github.com/eclipse/kura.git \
-  GIT_BRANCH=develop \
+  DEFAULT_GIT_REPO=https://github.com/eclipse/kura.git \
+  DEFAULT_GIT_BRANCH=develop \
+  DEFAULT_KURA_COMMIT=24efd0dffe1ca0a816d8da2832223c62e961fc7a \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
-  MAVEN_PROPS=-DskipTests \
-  KURA_COMMIT=24efd0dffe1ca0a816d8da2832223c62e961fc7a
+  MAVEN_PROPS=-DskipTests
 
-RUN yum -y update && \
+RUN \
+    : ${GIT_REPO:=${DEFAULT_GIT_REPO}} && \
+    : ${GIT_BRANCH:=${DEFAULT_GIT_BRANCH}} && \
+    : ${KURA_COMMIT:=${DEFAULT_KURA_COMMIT}} && \
+    echo "$GIT_REPO / $GIT_BRANCH / $KURA_COMMIT" && \
+    yum -y update && \
     yum -y install scl-utils scl-utils-build centos-release-scl && \
     yum -y install git java-1.8.0-openjdk-devel rh-maven35 && \
     git clone "$GIT_REPO" -b "$GIT_BRANCH" && cd kura && git checkout $KURA_COMMIT && \
