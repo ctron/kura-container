@@ -1,9 +1,9 @@
 FROM centos:7
 
 MAINTAINER Jens Reimann <jreimann@redhat.com>
-LABEL maintainer "Jens Reimann <jreimann@redhat.com>" \
-      io.k8s.description "Containerized version of the Eclipse Kura™ IoT gateway" \
-      io.openshift.non-scalable true
+LABEL maintainer="Jens Reimann <jreimann@redhat.com>" \
+      io.k8s.description="Containerized version of the Eclipse Kura™ IoT gateway" \
+      io.openshift.non-scalable=true
 
 ENV \
   GIT_REPO=https://github.com/eclipse/kura.git \
