@@ -24,8 +24,8 @@ and on the machine you will be using.
 * Click on "Add to project"
 * Switch to "Import YAML / JSON"
 * Either
-  * Copy and paste the content of `kura-template.yml` into the text area
-  * Use the "Browse…" button and load the `kura-template.yml` file
+  * Copy and paste the content of `kura-emphermal.yml` into the text area
+  * Use the "Browse…" button and load the `kura-emphermal.yml` file
 * Press "Create"
 * In the following confirmation dialog:
   * Keep the defaults
@@ -38,4 +38,4 @@ not that need to have the
 [OpenShift CLI installed](https://docs.openshift.org/latest/cli_reference/get_started_cli.html) installed
 and you need to be logged in to your OpenShift cluster with `oc login`.
 
-    oc new-app --file=kura-template.yml
+    oc new-app --file=kura-emphermal.yml

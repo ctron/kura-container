@@ -10,10 +10,7 @@ Once the image is started you can navigate your browser to http://localhost:8080
 
 ## Making use of Apache Felix File Install
 
-This image includes [Apache Felix FileInstall](https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html "Apache Felix File Install"),
-which monitors a directory and loads all OSGi bundles it detects during runtime. Adding a new bundle is
-as easy as dropping an OSGi JAR file into a directory. Uninstalling is done by deleting the file and updates
-are simply done by overwriting the bundle with a newer version.
+This image includes [Apache Felix FileInstall](https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html "Apache Felix File Install"), which monitors a directory and loads all OSGi bundles it detects during runtime. Adding a new bundle is as easy as dropping an OSGi JAR file into a directory. Uninstalling is done by deleting the file and updates are simply done by overwriting the bundle with a newer version.
 
 File Install loads bundles from `/opt/eclipse/kura/load` which is also defined as a docker volume,
 so that you can link this up with your container host:

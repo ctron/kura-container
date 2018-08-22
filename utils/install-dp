@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
+
+URL="$1"
+shift
+
+DIR=$(mktemp -d)
+cd "$DIR"
+curl -sLO "$URL"
+DP=$(find . -name "*.dp")
+
+mkdir -p /opt/eclipse/kura/kura/packages
+cp "$DP" /opt/eclipse/kura/kura/packages/
+
+echo "$($SCRIPT_DIR/extract-dp-name "$DP")=file\:${DP}" >> /opt/eclipse/kura/kura/dpa.properties
+
+rm "$DP"

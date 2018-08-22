@@ -12,11 +12,14 @@ ENV \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests
 
+COPY ./utils /usr/local/bin
+
 RUN \
     : ${GIT_REPO:=${DEFAULT_GIT_REPO}} && \
     : ${GIT_BRANCH:=${DEFAULT_GIT_BRANCH}} && \
     : ${KURA_COMMIT:=${DEFAULT_KURA_COMMIT}} && \
     echo "$GIT_REPO / $GIT_BRANCH / $KURA_COMMIT" && \
+    chmod a+x -R /usr/local/bin && \
     yum -y update && \
     yum -y install scl-utils scl-utils-build centos-release-scl && \
     yum -y install git java-1.8.0-openjdk-devel rh-maven35 && \
@@ -34,23 +37,24 @@ RUN \
     yum -y install java-1.8.0-openjdk-headless && \
     yum -y install procps zip unzip gzip tar psmisc socat telnet dos2unix openssl net-tools hostname which && \
     yum -y clean all && rm -rf /var/cache/yum && \
+    \
     /kura/kura/distrib/target/kura_3.3.0-SNAPSHOT_intel-up2-centos-7-nn_installer.sh && \
-    rm -Rf /kura /root/.m2 && \
-    mkdir -p /opt/eclipse/kura/kura/packages && \
-    cd /opt/eclipse/kura/kura/packages && \
-    curl -O  https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.5.1/de.dentrassi.kura.addons.utils.fileinstall-0.5.1.dp && \
-    echo "de.dentrassi.kura.addons.utils.fileinstall=file\:/opt/eclipse/kura/kura/packages/de.dentrassi.kura.addons.utils.fileinstall-0.5.1.dp" > /opt/eclipse/kura/kura/dpa.properties && \
-    echo "felix.fileinstall.disableNio2=true" >> /opt/eclipse/kura/kura/config.ini && \
+    install-dp "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.5.1/de.dentrassi.kura.addons.utils.fileinstall-0.5.1.dp" && \
+    add-config-ini "felix.fileinstall.disableNio2=true" && \
+    add-config-ini "felix.fileinstall.dir=/opt/eclipse/kura/load,/load" && \
     sed -ie "s/org.osgi.service.http.port=.*/org.osgi.service.http.port=8080/g" /opt/eclipse/kura/kura/config.ini && \
     mkdir /opt/eclipse/kura/load && \
     chmod a+rw -R /opt/eclipse && \
     find /opt/eclipse -type d | xargs chmod a+x && \
     chmod a+rwx /var/log && \
     `# Test for the existence of the entry point` \
-    test -x /opt/eclipse/kura/bin/start_kura.sh
+    test -x /opt/eclipse/kura/bin/start_kura.sh && \
+    \
+    tar cavf /kura.init.tar /opt/eclipse && \
+    rm -Rf /opt/eclipse && \
+    \
+    rm -Rf /kura /root/.m2
 
 EXPOSE 8080
 
-VOLUME ["/opt/eclipse/kura/load"]
-
-ENTRYPOINT ["/opt/eclipse/kura/bin/start_kura.sh"]
+ENTRYPOINT ["/usr/local/bin/kura-entry-point"]

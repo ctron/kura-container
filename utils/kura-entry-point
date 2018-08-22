@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+set -e
+
+if [ ! -x /opt/eclipse/kura/bin/start_kura.sh ]; then
+	echo "Kura is still boxed, unpacking ..."
+	mkdir -p /opt/eclipse
+	cd /opt/eclipse
+	tar --strip-components 2 -xvf /kura.init.tar
+	echo "Initial Kura instance unpacked, commencing start"
+fi
+
+exec /opt/eclipse/kura/bin/start_kura.sh

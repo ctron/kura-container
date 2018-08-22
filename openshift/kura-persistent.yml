@@ -1,0 +1,198 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: kura-emulator-template
+  annotations:
+    description: "Eclipse Kura™ emulator instance"
+    iconClass: "pficon-virtual-machine"
+    tags: "iot"
+
+# Parameters
+
+parameters:
+- name:         GIT_BRANCH
+  displayName:     Git branch
+  value:           master
+  required:        true
+  description:     The branch from where to pull the files for building the Kura emulator.
+                   This is not the branch to pull the Kura sources from.
+- name:         KURA_GIT_URI
+  displayName:     Kura Git repository
+  required:        false
+- name:         KURA_GIT_BRANCH
+  displayName:     Kura Git Branch
+  required:        false
+- name:         KURA_COMMIT
+  displayName:     Kura commit to build
+  required:        false
+- name:         VOLUME_SIZE
+  value:           2Gi
+- name:         VOLUME_STORAGE_CLASS
+
+objects:
+
+# Build configuration
+
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: centos
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - name: "7"
+      from:
+        kind: DockerImage
+        name: docker.io/centos:7
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
+
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: kura-emulator
+
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: kura-emulator-build
+  spec:
+    triggers: 
+      - type: ImageChange
+      - type: ConfigChange
+    source: 
+      type: Git
+      git:
+        uri: https://github.com/ctron/kura-emulator
+        ref: ${GIT_BRANCH}
+    strategy: 
+      type: Docker
+      dockerStrategy:
+        env:
+          - name: GIT_REPO
+            value: ${KURA_GIT_URI}
+          - name: GIT_BRANCH
+            value: ${KURA_GIT_BRANCH}
+          - name: KURA_COMMIT
+            value: ${KURA_COMMIT}
+          - name: SKIP_INSTALLATION
+            value: "true"
+    postCommit:
+    output: 
+      to:
+        kind: ImageStreamTag
+        name: kura-emulator:latest
+
+# Volume
+
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: kura-emulator-instance-pvc
+    labels:
+      app: kura-emulator
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${VOLUME_SIZE}
+    storageClassName: ${VOLUME_STORAGE_CLASS}
+
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: kura-emulator-load-config
+    labels:
+      app: kura-emulator
+
+# Service
+
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: kura-emulator
+  spec:
+    replicas: 1
+    selector:
+      app: kura-emulator
+      deploymentconfig: kura-emulator
+    strategy:
+      type: Recreate
+    triggers:
+      - type: ConfigChange 
+      - type: ImageChange 
+        imageChangeParams:
+          automatic: true
+          containerNames:
+            - kura-emulator
+          from:
+            kind: ImageStreamTag
+            name: kura-emulator:latest
+    template:
+      metadata:
+        labels:
+          app: kura-emulator
+          deploymentconfig: kura-emulator
+      spec:
+        containers:
+        - image: kura-emulator
+          imagePullPolicy: Always
+          name: kura-emulator
+          ports:
+          - containerPort: 8080 
+            name: http
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 5
+          volumeMounts:
+          - mountPath: /opt/eclipse
+            name: instance
+          - mountPath: /load
+            name: load
+        volumes:
+        - name: instance
+          persistentVolumeClaim:
+            claimName: kura-emulator-instance-pvc
+        - name: load
+          configMap:
+            name: kura-emulator-load-config
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: kura-emulator
+    labels:
+      app: kura-emulator
+  spec:
+    ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    selector:
+      app: kura-emulator
+      deploymentconfig: kura-emulator
+
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: console
+    labels:
+      app: kura-emulator
+  spec:
+    to:
+      kind: Service
+      name: kura-emulator
+    port:
+      targetPort: http
+    tls:
+      termination: edge
