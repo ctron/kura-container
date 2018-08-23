@@ -15,6 +15,6 @@ DP=$(find . -name "*.dp" -printf '%P\n')
 mkdir -p /opt/eclipse/kura/kura/packages
 cp "$DP" /opt/eclipse/kura/kura/packages/
 
-echo "$($SCRIPT_DIR/extract-dp-name "$DP")=file\:${DP}" >> /opt/eclipse/kura/kura/dpa.properties
+echo "$($SCRIPT_DIR/extract-dp-name "$DP")=file\:/opt/eclipse/kura/kura/packages/${DP}" >> /opt/eclipse/kura/kura/dpa.properties
 
 rm "$DP"
