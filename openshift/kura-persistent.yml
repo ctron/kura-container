@@ -106,8 +106,7 @@ objects:
     labels:
       app: kura-instance
     annotations:
-      image.openshift.io/triggers: |
-        [{"from":{"kind":"ImageStreamTag","name":"kura-emulator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name='kura-emulator')].image"}]
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"kura-emulator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"kura-emulator\")].image"}]'
   spec:
     serviceName: kura-instance
     replicas: 1
