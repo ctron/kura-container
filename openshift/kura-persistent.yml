@@ -54,11 +54,15 @@ objects:
   apiVersion: v1
   metadata:
     name: kura-emulator
+    labels:
+      app: kura-instance
 
 - kind: BuildConfig
   apiVersion: v1
   metadata:
     name: kura-emulator-build
+    labels:
+      app: kura-instance
   spec:
     triggers: 
       - type: ImageChange
@@ -91,9 +95,9 @@ objects:
 - kind: PersistentVolumeClaim
   apiVersion: v1
   metadata:
-    name: kura-emulator-instance-pvc
+    name: kura-instance-pvc
     labels:
-      app: kura-emulator
+      app: kura-instance
   spec:
     accessModes:
     - ReadWriteOnce
@@ -105,21 +109,23 @@ objects:
 - kind: ConfigMap
   apiVersion: v1
   metadata:
-    name: kura-emulator-load-config
+    name: kura-instance-load-config
     labels:
-      app: kura-emulator
+      app: kura-instance
 
 # Service
 
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: kura-emulator
+    name: kura-instance
+    labels:
+      app: kura-instance
   spec:
     replicas: 1
     selector:
-      app: kura-emulator
-      deploymentconfig: kura-emulator
+      app: kura-instance
+      deploymentconfig: kura-instance
     strategy:
       type: Recreate
     triggers:
@@ -135,8 +141,8 @@ objects:
     template:
       metadata:
         labels:
-          app: kura-emulator
-          deploymentconfig: kura-emulator
+          app: kura-instance
+          deploymentconfig: kura-instance
       spec:
         containers:
         - image: kura-emulator
@@ -161,17 +167,17 @@ objects:
         volumes:
         - name: instance
           persistentVolumeClaim:
-            claimName: kura-emulator-instance-pvc
+            claimName: kura-instance-pvc
         - name: load
           configMap:
-            name: kura-emulator-load-config
+            name: kura-instance-load-config
 
 - kind: Service
   apiVersion: v1
   metadata:
-    name: kura-emulator
+    name: kura-instance
     labels:
-      app: kura-emulator
+      app: kura-instance
   spec:
     ports:
     - name: http
@@ -179,19 +185,19 @@ objects:
       port: 8080
       targetPort: 8080
     selector:
-      app: kura-emulator
-      deploymentconfig: kura-emulator
+      app: kura-instance
+      deploymentconfig: kura-instance
 
 - kind: Route
   apiVersion: v1
   metadata:
     name: console
     labels:
-      app: kura-emulator
+      app: kura-instance
   spec:
     to:
       kind: Service
-      name: kura-emulator
+      name: kura-instance
     port:
       targetPort: http
     tls:
