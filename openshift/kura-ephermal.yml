@@ -25,10 +25,30 @@ parameters:
 - name:         KURA_COMMIT
   displayName:     Kura commit to build
   required:        false
+- name:         VOLUME_SIZE
+  value:           2Gi
+- name:         VOLUME_STORAGE_CLASS
 
 objects:
 
 # Build configuration
+
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    name: centos
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - name: "7"
+      from:
+        kind: DockerImage
+        name: docker.io/centos:7
+      importPolicy:
+        scheduled: true
+      referencePolicy:
+        type: Source
 
 - kind: ImageStream
   apiVersion: v1
@@ -68,41 +88,45 @@ objects:
         kind: ImageStreamTag
         name: kura-emulator:latest
 
+# Volume
+
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: kura-instance-load-config
+    labels:
+      app: kura-instance
+
 # Service
 
-- kind: DeploymentConfig
-  apiVersion: v1
+- kind: StatefulSet
+  apiVersion: apps/v1
   metadata:
     name: kura-instance
     labels:
       app: kura-instance
+    annotations:
+      image.openshift.io/triggers: |
+        [{"from":{"kind":"ImageStreamTag","name":"kura-emulator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name='kura-emulator')].image"}]
   spec:
+    serviceName: kura-instance
     replicas: 1
     selector:
-      app: kura-instance
-      deploymentconfig: kura-instance
-    strategy:
-      type: Recreate
-    triggers:
-      - type: ConfigChange 
-      - type: ImageChange 
-        imageChangeParams:
-          automatic: true
-          containerNames:
-            - kura-emulator
-          from:
-            kind: ImageStreamTag
-            name: kura-emulator:latest
+      matchLabels:
+        app: kura-instance
+        statefulset: kura-instance
     template:
       metadata:
+        annotations:
+          alpha.image.policy.openshift.io/resolve-names: '*'
         labels:
           app: kura-instance
-          deploymentconfig: kura-instance
+          statefulset: kura-instance
       spec:
         containers:
-        - image: kura-emulator
+        - name: kura-emulator
+          image: kura-emulator:latest
           imagePullPolicy: Always
-          name: kura-emulator
           ports:
           - containerPort: 8080 
             name: http
@@ -114,6 +138,13 @@ objects:
             tcpSocket:
               port: 8080
             timeoutSeconds: 5
+          volumeMounts:
+          - mountPath: /load
+            name: load
+        volumes:
+        - name: load
+          configMap:
+            name: kura-instance-load-config
 
 - kind: Service
   apiVersion: v1
@@ -129,7 +160,7 @@ objects:
       targetPort: 8080
     selector:
       app: kura-instance
-      deploymentconfig: kura-instance
+      statefulset: kura-instance
 
 - kind: Route
   apiVersion: v1

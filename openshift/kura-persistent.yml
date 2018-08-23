@@ -82,8 +82,6 @@ objects:
             value: ${KURA_GIT_BRANCH}
           - name: KURA_COMMIT
             value: ${KURA_COMMIT}
-          - name: SKIP_INSTALLATION
-            value: "true"
     postCommit:
     output: 
       to:
@@ -91,20 +89,6 @@ objects:
         name: kura-emulator:latest
 
 # Volume
-
-- kind: PersistentVolumeClaim
-  apiVersion: v1
-  metadata:
-    name: kura-instance-pvc
-    labels:
-      app: kura-instance
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: ${VOLUME_SIZE}
-    storageClassName: ${VOLUME_STORAGE_CLASS}
 
 - kind: ConfigMap
   apiVersion: v1
@@ -115,39 +99,34 @@ objects:
 
 # Service
 
-- kind: DeploymentConfig
-  apiVersion: v1
+- kind: StatefulSet
+  apiVersion: apps/v1
   metadata:
     name: kura-instance
     labels:
       app: kura-instance
+    annotations:
+      image.openshift.io/triggers: |
+        [{"from":{"kind":"ImageStreamTag","name":"kura-emulator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name='kura-emulator')].image"}]
   spec:
+    serviceName: kura-instance
     replicas: 1
     selector:
-      app: kura-instance
-      deploymentconfig: kura-instance
-    strategy:
-      type: Recreate
-    triggers:
-      - type: ConfigChange 
-      - type: ImageChange 
-        imageChangeParams:
-          automatic: true
-          containerNames:
-            - kura-emulator
-          from:
-            kind: ImageStreamTag
-            name: kura-emulator:latest
+      matchLabels:
+        app: kura-instance
+        statefulset: kura-instance
     template:
       metadata:
+        annotations:
+          alpha.image.policy.openshift.io/resolve-names: '*'
         labels:
           app: kura-instance
-          deploymentconfig: kura-instance
+          statefulset: kura-instance
       spec:
         containers:
-        - image: kura-emulator
+        - name: kura-emulator
+          image: kura-emulator:latest
           imagePullPolicy: Always
-          name: kura-emulator
           ports:
           - containerPort: 8080 
             name: http
@@ -165,12 +144,19 @@ objects:
           - mountPath: /load
             name: load
         volumes:
-        - name: instance
-          persistentVolumeClaim:
-            claimName: kura-instance-pvc
         - name: load
           configMap:
             name: kura-instance-load-config
+    volumeClaimTemplates:
+    - metadata:
+        name: instance
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${VOLUME_SIZE}
+        storageClassName: ${VOLUME_STORAGE_CLASS}
 
 - kind: Service
   apiVersion: v1
@@ -186,7 +172,7 @@ objects:
       targetPort: 8080
     selector:
       app: kura-instance
-      deploymentconfig: kura-instance
+      statefulset: kura-instance
 
 - kind: Route
   apiVersion: v1

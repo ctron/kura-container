@@ -10,7 +10,7 @@ shift
 DIR=$(mktemp -d)
 cd "$DIR"
 curl -sLO "$URL"
-DP=$(find . -name "*.dp")
+DP=$(find . -name "*.dp" -printf '%P\n')
 
 mkdir -p /opt/eclipse/kura/kura/packages
 cp "$DP" /opt/eclipse/kura/kura/packages/
