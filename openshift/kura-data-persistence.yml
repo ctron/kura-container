@@ -3,9 +3,18 @@ kind: Template
 metadata:
   name: kura-emulator-template
   annotations:
-    description: "Eclipse Kura™ emulator instance"
-    iconClass: "pficon-virtual-machine"
+    openshift.io/display-name: Eclipse Kura™ semi-persistent emulator instance
+    description: >-
+      A deployment of Kura for running in a semi-persitent mode. This will use the Kura
+      instance from the container image and keep data. It is not possible updating the instance
+      using the Kura updater archives. In order to update Kura a new container image has to be used.
+      But runtime data and configuration will be persisted.
+    iconClass: "pficon-connected"
     tags: "iot"
+    openshift.io/documentation-url: "https://github.com/ctron/kura-emulator/openshift"
+
+labels:
+  kura.persistence: data
 
 # Parameters
 
@@ -17,17 +26,22 @@ parameters:
   description:     The branch from where to pull the files for building the Kura emulator.
                    This is not the branch to pull the Kura sources from.
 - name:         KURA_GIT_URI
-  displayName:     Kura Git repository
+  displayName:     Override Kura Git repository
   required:        false
 - name:         KURA_GIT_BRANCH
-  displayName:     Kura Git Branch
+  displayName:     Override Kura Git Branch
   required:        false
 - name:         KURA_COMMIT
-  displayName:     Kura commit to build
+  displayName:     Override Kura commit to build
+  description:     This is a specific commit which has to be present in the Git URI, Git Branch
+                   combination provided. Only this commit will be built. This ensures that sub-sequent
+                   builds re-create the same Kura instance.
   required:        false
 - name:         VOLUME_SIZE
-  value:           2Gi
+  value:           1Gi
+  displayName:     PVC volume size
 - name:         VOLUME_STORAGE_CLASS
+  displayName:     PVC storage class
 
 objects:
 
@@ -88,7 +102,7 @@ objects:
         kind: ImageStreamTag
         name: kura-emulator:latest
 
-# Volume
+# Configs
 
 - kind: ConfigMap
   apiVersion: v1
@@ -96,6 +110,32 @@ objects:
     name: kura-instance-load-config
     labels:
       app: kura-instance
+
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: kura-instance-config
+    labels:
+      app: kura-instance
+  data:
+    log4j.xml: |-
+      <?xml version="1.0" encoding="UTF-8"?>
+      <Configuration status="warn" name="EclipseKura" strict="true" monitorInterval="30">
+
+          <Appenders>
+              <Console name="STDOUT" target="SYSTEM_OUT">
+                  <PatternLayout pattern="%d{ISO8601} [%t] %-5p %c{1.} - %m%n"/>
+              </Console>
+          </Appenders>
+
+          <Loggers>
+              <Root level="warn">
+                  <AppenderRef ref="STDOUT"/>
+              </Root>
+        </Loggers>
+
+      </Configuration>
+    kura_custom.properties:
 
 # Service
 
@@ -129,7 +169,26 @@ objects:
           ports:
           - containerPort: 8080 
             name: http
+          env:
+          - name: JAVA_OPTS
+            value: -XX:ParallelGCThreads=1 -XX:CICompilerCount=2 -XX:ActiveProcessorCount=1
+          - name: KURA_CUSTOM_PROPERTIES_FILE
+            value: /config/kura_custom.properties
+          - name: KURA_LOG4J_FILE
+            value: /config/log4j.xml
+          - name: PERSISTENT_DIR
+            value: /persistent
+          - name: KURA_DEVICE_NAME
+            value: OpenShift Kura instance
           readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 5
+          livenessProbe:
             failureThreshold: 5
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -140,22 +199,27 @@ objects:
           resources:
             limits:
               cpu: "1"
-              memory: 1280Mi
+              memory: 1024Mi
             requests:
               cpu: "1"
-              memory: 1280Mi
+              memory: 1024Mi
           volumeMounts:
-          - mountPath: /opt/eclipse
-            name: instance
+          - mountPath: /persistent
+            name: data
           - mountPath: /load
             name: load
+          - mountPath: /config
+            name: config
         volumes:
         - name: load
           configMap:
             name: kura-instance-load-config
+        - name: config
+          configMap:
+            name: kura-instance-config
     volumeClaimTemplates:
     - metadata:
-        name: instance
+        name: data
       spec:
         accessModes:
         - ReadWriteOnce

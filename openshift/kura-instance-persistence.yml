@@ -3,19 +3,20 @@ kind: Template
 metadata:
   name: kura-emulator-template
   annotations:
-    openshift.io/display-name: Eclipse Kura™ non-persistent emulator instance
+    openshift.io/display-name: Eclipse Kura™ fully persistent emulator instance
     description: >-
-      An example deployment of Kura for simple and quick testing. This template doesn't
-      require a persistent volume, but also doesn't keep any state when the pod is destroyed.
-      
-      WARNING: Any data stored will be lost upon pod destruction. Only use this
-      template for testing.
+      A deployment of Kura for running in a full persitent mode. This will check if a Kura
+      instance is already present in the target volume. If not it will unpack the Kura instance
+      from the container image. Subsequent starts will only use the unpacked Kura instance. Updating the
+      container image doesn't update the Kura instance, but if the Kura instance is updated using its
+      updater mechanisms, then the container image will also not alter the Kura instance on the volume and
+      keep the updated version.
     iconClass: "pficon-connected"
-    tags: "iot,quickstart"
+    tags: "iot"
     openshift.io/documentation-url: "https://github.com/ctron/kura-emulator/openshift"
 
 labels:
-  kura.persistence: ephermal
+  kura.persistence: instance
 
 # Parameters
 
@@ -38,6 +39,11 @@ parameters:
                    combination provided. Only this commit will be built. This ensures that sub-sequent
                    builds re-create the same Kura instance.
   required:        false
+- name:         VOLUME_SIZE
+  value:           2Gi
+  displayName:     PVC volume size
+- name:         VOLUME_STORAGE_CLASS
+  displayName:     PVC storage class
 
 objects:
 
@@ -63,14 +69,14 @@ objects:
 - kind: ImageStream
   apiVersion: v1
   metadata:
-    name: kura-emulator
+    name: kura-emulator-packed
     labels:
       app: kura-instance
 
 - kind: BuildConfig
   apiVersion: v1
   metadata:
-    name: kura-emulator-build
+    name: kura-emulator-packed-build
     labels:
       app: kura-instance
   spec:
@@ -92,11 +98,15 @@ objects:
             value: ${KURA_GIT_BRANCH}
           - name: KURA_COMMIT
             value: ${KURA_COMMIT}
+          - name: PACKED
+            value: "true"
+          - name: PERSISTENT_DIR
+            value: /opt/eclipse/kura/persistent
     postCommit:
     output: 
       to:
         kind: ImageStreamTag
-        name: kura-emulator:latest
+        name: kura-emulator-packed:latest
 
 # Configs
 
@@ -142,7 +152,7 @@ objects:
     labels:
       app: kura-instance
     annotations:
-      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"kura-emulator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"kura-emulator\")].image"}]'
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"kura-emulator-packed:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"kura-emulator\")].image"}]'
   spec:
     serviceName: kura-instance
     replicas: 1
@@ -160,7 +170,7 @@ objects:
       spec:
         containers:
         - name: kura-emulator
-          image: kura-emulator:latest
+          image: kura-emulator-packed:latest
           imagePullPolicy: Always
           ports:
           - containerPort: 8080 
@@ -172,6 +182,8 @@ objects:
             value: /config/kura_custom.properties
           - name: KURA_LOG4J_FILE
             value: /config/log4j.xml
+          - name: PERSISTENT_DIR
+            value: /opt/eclipse/kura/persistent
           - name: KURA_DEVICE_NAME
             value: OpenShift Kura instance
           readinessProbe:
@@ -198,6 +210,8 @@ objects:
               cpu: "1"
               memory: 1024Mi
           volumeMounts:
+          - mountPath: /opt/eclipse
+            name: instance
           - mountPath: /load
             name: load
           - mountPath: /config
@@ -209,6 +223,16 @@ objects:
         - name: config
           configMap:
             name: kura-instance-config
+    volumeClaimTemplates:
+    - metadata:
+        name: instance
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: ${VOLUME_SIZE}
+        storageClassName: ${VOLUME_STORAGE_CLASS}
 
 - kind: Service
   apiVersion: v1

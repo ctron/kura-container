@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+set -e
+
+if [ "$PACKED" == "true" ]; then
+	tar cavf /kura.init.tar /opt/eclipse
+	rm -Rf /opt/eclipse
+fi

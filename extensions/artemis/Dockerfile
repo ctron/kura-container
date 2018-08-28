@@ -12,13 +12,10 @@ LABEL maintainer "Jens Reimann <jreimann@redhat.com>"
 COPY snapshot_0.xml /opt/eclipse/kura/data/snapshots/snapshot_0.xml
 
 RUN \
+    unpack-kura && \
     cp /opt/eclipse/kura/data/snapshots/snapshot_0.xml /opt/eclipse/kura/.data/snapshot_0.xml && \
     chmod a=rw /opt/eclipse/kura/data/snapshots/snapshot_0.xml /opt/eclipse/kura/.data/snapshot_0.xml && \
-    cd /opt/eclipse/kura/kura/packages && \
-    curl -O  https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.artemis.server/0.3.0/de.dentrassi.kura.addons.artemis.server-0.3.0.dp && \
-    echo "de.dentrassi.kura.addons.artemis.server=file\:/opt/eclipse/kura/kura/packages/de.dentrassi.kura.addons.artemis.server-0.3.0.dp" > /opt/eclipse/kura/kura/dpa.properties
-    
+    dp-install "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.artemis.server/0.3.0/de.dentrassi.kura.addons.artemis.server-0.3.0.dp" \
+    pack-kura
 
 EXPOSE 5672 1883
-
-

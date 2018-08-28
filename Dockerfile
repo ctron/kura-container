@@ -8,12 +8,12 @@ LABEL maintainer="Jens Reimann <jreimann@redhat.com>" \
 ENV \
   DEFAULT_GIT_REPO=https://github.com/eclipse/kura.git \
   DEFAULT_GIT_BRANCH=develop \
-  DEFAULT_KURA_COMMIT=24efd0dffe1ca0a816d8da2832223c62e961fc7a \
+  DEFAULT_KURA_COMMIT=8be442a1eb723667ca765acbfcd3982575b3e6ca \
   DEFAULT_PACKED=false \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
-  MAVEN_PROPS=-DskipTests
-
-COPY ./utils /usr/local/bin
+  MAVEN_PROPS=-DskipTests \
+  KURA_DIR=/opt/eclipse/kura \
+  LAUNCHER_VERSION="1.4.0.v20161219-1356"
 
 RUN \
     : ${GIT_REPO:=${DEFAULT_GIT_REPO}} && \
@@ -41,22 +41,22 @@ RUN \
     yum -y clean all && rm -rf /var/cache/yum && \
     \
     /kura/kura/distrib/target/kura_3.3.0-SNAPSHOT_intel-up2-centos-7-nn_installer.sh && \
-    install-dp "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.5.1/de.dentrassi.kura.addons.utils.fileinstall-0.5.1.dp" && \
-    add-config-ini "felix.fileinstall.disableNio2=true" && \
-    add-config-ini "felix.fileinstall.dir=/opt/eclipse/kura/load,/load" && \
-    sed -ie "s/org.osgi.service.http.port=.*/org.osgi.service.http.port=8080/g" /opt/eclipse/kura/kura/config.ini && \
-    mkdir /opt/eclipse/kura/load && \
     chmod a+rw -R /opt/eclipse && \
     find /opt/eclipse -type d | xargs chmod a+x && \
     chmod a+rwx /var/log && \
     `# Test for the existence of the entry point` \
-    test -x /opt/eclipse/kura/bin/start_kura.sh && \
-    \
-    if [ "$PACKED" == "true" ]; then ( \
-      tar cavf /kura.init.tar /opt/eclipse && \
-      rm -Rf /opt/eclipse \
-    ) fi && \
+    test -x "${KURA_DIR}/bin/start_kura.sh" && \
     rm -Rf /kura /root/.m2
+
+COPY ./utils /usr/local/bin
+
+RUN \
+    dp-install "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.5.1/de.dentrassi.kura.addons.utils.fileinstall-0.5.1.dp" && \
+    add-config-ini "felix.fileinstall.disableNio2=true" && \
+    add-config-ini "felix.fileinstall.dir=/opt/eclipse/kura/load,/load" && \
+    sed -ie "s/org.osgi.service.http.port=.*/org.osgi.service.http.port=8080/g" "${KURA_DIR}/kura/config.ini" && \
+    install -m 0777 -D -d "${KURA_DIR}/load" && \
+    pack-kura
 
 EXPOSE 8080
 
