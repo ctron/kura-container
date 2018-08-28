@@ -12,10 +12,12 @@ Once the image is started you can navigate your browser to http://localhost:8080
 
 This image includes [Apache Felix FileInstall](https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html "Apache Felix File Install"), which monitors a directory and loads all OSGi bundles it detects during runtime. Adding a new bundle is as easy as dropping an OSGi JAR file into a directory. Uninstalling is done by deleting the file and updates are simply done by overwriting the bundle with a newer version.
 
-File Install loads bundles from `/opt/eclipse/kura/load` which is also defined as a docker volume,
+**Note:** The location of the directory changed from `/opt/eclipse/kura/load` to `/load`.
+
+File Install loads bundles from `/load` which is also defined as a docker volume,
 so that you can link this up with your container host:
 
-    docker run -ti -p 8080:8080 -v /home/user/path/to/bundles:/opt/eclipse/kura/load:z ctron/kura-emulator
+    docker run -ti -p 8080:8080 -v /home/user/path/to/bundles:/load:z ctron/kura-emulator
 
 Now you can access `/home/user/path/to/bundles` on your host machine and bundles will be loaded
 by Kura inside the docker container.

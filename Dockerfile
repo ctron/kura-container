@@ -9,6 +9,7 @@ ENV \
   DEFAULT_GIT_REPO=https://github.com/eclipse/kura.git \
   DEFAULT_GIT_BRANCH=develop \
   DEFAULT_KURA_COMMIT=24efd0dffe1ca0a816d8da2832223c62e961fc7a \
+  DEFAULT_PACKED=false \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests
 
@@ -18,6 +19,7 @@ RUN \
     : ${GIT_REPO:=${DEFAULT_GIT_REPO}} && \
     : ${GIT_BRANCH:=${DEFAULT_GIT_BRANCH}} && \
     : ${KURA_COMMIT:=${DEFAULT_KURA_COMMIT}} && \
+    : ${PACKED:=${DEFAULT_PACKED}} && \
     echo "$GIT_REPO / $GIT_BRANCH / $KURA_COMMIT" && \
     chmod a+x -R /usr/local/bin && \
     yum -y update && \
@@ -50,9 +52,10 @@ RUN \
     `# Test for the existence of the entry point` \
     test -x /opt/eclipse/kura/bin/start_kura.sh && \
     \
-    tar cavf /kura.init.tar /opt/eclipse && \
-    rm -Rf /opt/eclipse && \
-    \
+    if [ "$PACKED" == "true" ]; then ( \
+      tar cavf /kura.init.tar /opt/eclipse && \
+      rm -Rf /opt/eclipse \
+    ) fi && \
     rm -Rf /kura /root/.m2
 
 EXPOSE 8080
