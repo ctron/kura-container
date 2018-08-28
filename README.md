@@ -20,7 +20,7 @@ so that you can link this up with your container host:
 Now you can access `/home/user/path/to/bundles` on your host machine and bundles will be loaded
 by Kura inside the docker container.
 
-**Note:** It may be that a bundle which is first installed needs to be manually started using the Kura Web UI.
+**Note:** It may be that a bundle, which is first installed, needs to be manually started using the Kura Web UI.
 
 ## Running with JMX enabled
 
@@ -54,14 +54,14 @@ This docker container is being built by re-using the Intel UP² CentOS 7 image o
 It makes a few adjustments to the Kura sources and performs a full build from a specified
 Git commit of Kura.
 
-If you want to re-build this image, check out this repository and simply run `docker build .`.
+If you want to re-build this image, check out this repository and simply run `docker build .` on the command line.
 
 If you want to re-base this image on another Kura commit, then you will need to change the environment
 variable in the `Dockerfile` or from the command line.
 
 ## Running in OpenShift
 
-There also is a [simple OpenShift template](openshift/README.md)  which can be used to deploy this image into [OpenShift](https://www.openshift.org/).
+There also is an [OpenShift template](openshift/README.md), which can be used to deploy this image into [OpenShift](https://www.openshift.org/).
 
 ## Building extended images
 
