@@ -15,6 +15,18 @@ the argument `-console` to the container, be sure to also enable the interactive
 
     docker run -ti -p 8080:8080 ctron/kura-emulator -console
 
+## Different tags/branches
+
+The container image is provided in different branches:
+
+<dl>
+  <dt>develop</dt><dd>Points to some commit in the current development branch of Kura.</dd>
+  <dt>latest</dt><dd>Points to the latest released version of Kura (the default image).</dd>
+  <dt>x.y.z</dt><dd>Points to a specific release of Kura.</dd>
+</dl>
+
+Also see: https://hub.docker.com/r/ctron/kura-emulator/tags
+
 ## Making use of Apache Felix File Install
 
 This image includes [Apache Felix FileInstall](https://felix.apache.org/documentation/subprojects/apache-felix-file-install.html "Apache Felix File Install"), which monitors a directory and loads all OSGi bundles it detects during runtime. Adding a new bundle is as easy as dropping an OSGi JAR file into a directory. Uninstalling is done by deleting the file and updates are simply done by overwriting the bundle with a newer version.
