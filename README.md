@@ -4,9 +4,16 @@ This is a docker image running the Eclipse Kura™ emulator.
 
 Use the following command to run it:
 
-    docker run -ti -p 8080:8080 ctron/kura-emulator
+    docker run -p 8080:8080 ctron/kura-emulator
 
 Once the image is started you can navigate your browser to http://localhost:8080 and log in using the credentials `admin` : `admin`.
+
+## Enabling the interactive console
+
+By default the Kura instance will run without an Equinox console on the TTY. You can enable the interactive console by passing
+the argument `-console` to the container, be sure to also enable the interactive TTY support for the container:
+
+    docker run -ti -p 8080:8080 ctron/kura-emulator -console
 
 ## Making use of Apache Felix File Install
 
