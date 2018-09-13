@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: kura-emulator-template
+  name: kura-container-template
   annotations:
     openshift.io/display-name: Eclipse Kura™ non-persistent emulator instance
     description: >-
@@ -12,7 +12,7 @@ metadata:
       template for testing.
     iconClass: "pficon-connected"
     tags: "iot,quickstart"
-    openshift.io/documentation-url: "https://github.com/ctron/kura-emulator/openshift"
+    openshift.io/documentation-url: "https://github.com/ctron/kura-container/openshift"
 
 labels:
   kura.persistence: ephermal
@@ -63,14 +63,14 @@ objects:
 - kind: ImageStream
   apiVersion: v1
   metadata:
-    name: kura-emulator
+    name: kura-container
     labels:
       app: kura-instance
 
 - kind: BuildConfig
   apiVersion: v1
   metadata:
-    name: kura-emulator-build
+    name: kura-container-build
     labels:
       app: kura-instance
   spec:
@@ -96,7 +96,7 @@ objects:
     output: 
       to:
         kind: ImageStreamTag
-        name: kura-emulator:latest
+        name: kura-container:latest
 
 # Configs
 
@@ -142,7 +142,7 @@ objects:
     labels:
       app: kura-instance
     annotations:
-      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"kura-emulator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"kura-emulator\")].image"}]'
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"kura-container:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"kura-container\")].image"}]'
   spec:
     serviceName: kura-instance
     replicas: 1
@@ -159,8 +159,8 @@ objects:
           statefulset: kura-instance
       spec:
         containers:
-        - name: kura-emulator
-          image: kura-emulator:latest
+        - name: kura-container
+          image: kura-container:latest
           imagePullPolicy: Always
           ports:
           - containerPort: 8080 
