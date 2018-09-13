@@ -51,7 +51,7 @@ RUN \
 COPY ./utils /usr/local/bin
 
 RUN \
-    dp-install "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.5.1/de.dentrassi.kura.addons.utils.fileinstall-0.5.1.dp" && \
+    dp-install "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.6.0/de.dentrassi.kura.addons.utils.fileinstall-0.6.0.dp" && \
     add-config-ini "felix.fileinstall.disableNio2=true" && \
     add-config-ini "felix.fileinstall.dir=${KURA_DIR}/load,/load" && \
     sed -ie "s/org.osgi.service.http.port=.*/org.osgi.service.http.port=8080/g" "${KURA_DIR}/kura/config.ini" && \
