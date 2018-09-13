@@ -46,11 +46,13 @@ RUN \
     chmod a+rwx /var/log && \
     `# Test for the existence of the entry point` \
     test -x "${KURA_DIR}/bin/start_kura.sh" && \
-    rm -Rf /kura /root/.m2
+    rm -Rf /kura /root/.m2 && \
+    test "$PACKED" -eq "true" && touch /kura.packed && pack-kura
 
 COPY ./utils /usr/local/bin
 
 RUN \
+    unpack-kura && \
     dp-install "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.6.0/de.dentrassi.kura.addons.utils.fileinstall-0.6.0.dp" && \
     add-config-ini "felix.fileinstall.disableNio2=true" && \
     add-config-ini "felix.fileinstall.dir=/load" && \

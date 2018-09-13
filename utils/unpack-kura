@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "$PACKED" == "true" ]; then
+if [ -f /kura.packed ]; then
 	if [ -d /opt/eclipse/kura ]; then
 		rm -Rf /opt/eclipse
 		mkdir -p /opt/eclipse
