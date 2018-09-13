@@ -9,6 +9,8 @@ shift
 
  : ${DPA_PROPERTIES:=${KURA_DIR}/kura/dpa.properties}
 
+echo "Registering '$DP' ..."
+
 DP_NAME="$($SCRIPT_DIR/dp-extract-name "$DP")"
 
 echo "Register '$DP' as '$DP_NAME'"
