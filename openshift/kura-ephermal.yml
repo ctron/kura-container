@@ -80,7 +80,7 @@ objects:
     source: 
       type: Git
       git:
-        uri: https://github.com/ctron/kura-emulator
+        uri: https://github.com/ctron/kura-container
         ref: ${GIT_BRANCH}
     strategy: 
       type: Docker

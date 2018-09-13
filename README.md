@@ -1,19 +1,20 @@
-# Eclipse Kura™ emulator Docker image [![Docker Automated build](https://img.shields.io/docker/automated/ctron/kura-emulator.svg)](https://hub.docker.com/r/ctron/kura-emulator/)
+# Eclipse Kura™ container image [![Docker Automated build](https://img.shields.io/docker/automated/ctron/kura-container.svg)](https://hub.docker.com/r/ctron/kura-container/)
 
-This is a docker image running the Eclipse Kura™ emulator.
+This is a container image running Eclipse Kura™.
 
 Use the following command to run it:
 
-    docker run -p 8080:8080 ctron/kura-emulator
+    docker run -p 8080:8080 ctron/kura-container
 
 Once the image is started you can navigate your browser to http://localhost:8080 and log in using the credentials `admin` : `admin`.
 
 ## Enabling the interactive console
 
-By default the Kura instance will run without an Equinox console on the TTY. You can enable the interactive console by passing
-the argument `-console` to the container, be sure to also enable the interactive TTY support for the container:
+By default the Kura instance will run without an Equinox console on the TTY. You can enable the interactive console
+by passing the argument `-console` to the container, be sure to also enable the interactive TTY support for the
+container:
 
-    docker run -ti -p 8080:8080 ctron/kura-emulator -console
+    docker run -ti -p 8080:8080 ctron/kura-container -console
 
 ## Different tags/branches
 
@@ -25,7 +26,7 @@ The container image is provided in different branches:
   <dt>x.y.z</dt><dd>Points to a specific release of Kura.</dd>
 </dl>
 
-Also see: https://hub.docker.com/r/ctron/kura-emulator/tags
+Also see: https://hub.docker.com/r/ctron/kura-container/tags
 
 ## Making use of Apache Felix File Install
 
@@ -37,7 +38,7 @@ This image includes [Apache Felix FileInstall](https://felix.apache.org/document
 File Install loads bundles from `/load` which is also defined as a docker volume,
 so that you can link this up with your container host:
 
-    docker run -ti -p 8080:8080 -v /home/user/path/to/bundles:/load:z ctron/kura-emulator
+    docker run -ti -p 8080:8080 -v /home/user/path/to/bundles:/load:z ctron/kura-container
 
 Now you can access `/home/user/path/to/bundles` on your host machine and bundles will be loaded
 by Kura inside the docker container.
@@ -52,13 +53,13 @@ Running with JMX or debugging enabled can sometimes be quite helpful. However it
 
 If you want to run the image with JMX enabled use the following command on Linux:
 
-    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -Xrunjdwp:transport=dt_socket,address=9011,server=y,suspend=n" -p 8080:8080 --expose 9010 --expose 9011 -p 9010:9010 -p 9011:9011 ctron/kura-emulator
+    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -Xrunjdwp:transport=dt_socket,address=9011,server=y,suspend=n" -p 8080:8080 --expose 9010 --expose 9011 -p 9010:9010 -p 9011:9011 ctron/kura-container
 
 ### On Windows
 
 If you want to run the image with JMX enabled use the following command on Windows: 
 
-    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Djava.rmi.server.hostname=<IP> -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -Xrunjdwp:transport=dt_socket,address=9011,server=y,suspend=n" -p 8080:8080 --expose 9010 --expose 9011 -p 9010:9010 -p 9011:9011 ctron/kura-emulator
+    docker run -ti -eJAVA_OPTS="-Dcom.sun.management.jmxremote -Djava.rmi.server.hostname=<IP> -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Xdebug -Xrunjdwp:transport=dt_socket,address=9011,server=y,suspend=n" -p 8080:8080 --expose 9010 --expose 9011 -p 9010:9010 -p 9011:9011 ctron/kura-container
 
 Where *\<IP\>* is the Docker address, you can find it by using *ipconfig* and search for *DockerNAT* address, for instance:
 
