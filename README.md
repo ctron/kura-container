@@ -88,4 +88,4 @@ There also is an [OpenShift template](openshift/README.md), which can be used to
 If you want to add additional content to the Kura installation inside the docker image,
 it is possible to extend the installation.
 
-Also see: [extensions/artemis/README.md](extensions/artemis/README.md)
+Also see: [extensions/camel-additions](extensions/camel-additions)
