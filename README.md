@@ -20,11 +20,11 @@ container:
 
 The container image is provided in different branches:
 
-<dl>
-  <dt>develop</dt><dd>Points to some commit in the current development branch of Kura.</dd>
-  <dt>latest</dt><dd>Points to the latest released version of Kura (the default image).</dd>
-  <dt>x.y.z</dt><dd>Points to a specific release of Kura.</dd>
-</dl>
+| Branch              | Description |
+|---------------------|-------------|
+| `develop`          | Points to some commit in the current development branch of Kura. |
+| `latest` (default) | Points to the latest released version of Kura |
+| `x.y.z`            | Points to a specific release of Kura. |
 
 Also see: https://hub.docker.com/r/ctron/kura/tags
 
