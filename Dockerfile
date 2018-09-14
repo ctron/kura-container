@@ -47,7 +47,7 @@ RUN \
     `# Test for the existence of the entry point` \
     test -x "${KURA_DIR}/bin/start_kura.sh" && \
     rm -Rf /kura /root/.m2 && \
-    test "$PACKED" -eq "true" && touch /kura.packed && pack-kura
+    test "$PACKED" == "true" && touch /kura.packed && pack-kura
 
 COPY ./utils /usr/local/bin
 
