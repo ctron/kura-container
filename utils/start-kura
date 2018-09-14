@@ -3,7 +3,7 @@
 set -e
 
 mkdir -p /tmp/.kura/configuration
-cp "${KURA_DIR}/kura/config.ini" /tmp/.kura/configuration/
+cp "${KURA_DIR}/framework/config.ini" /tmp/.kura/configuration/
 
 JAVA_INT_OPTS="$JAVA_INT_OPTS -XX:+IgnoreUnrecognizedVMOptions"
 
@@ -23,9 +23,9 @@ JAVA_INT_OPTS="$JAVA_INT_OPTS -Dosgi.console=9000"
 JAVA_INT_OPTS="$JAVA_INT_OPTS -Declipse.consoleLog=true"
 
 JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.home=\"${KURA_DIR}/kura\""
-JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.configuration=file:\"${KURA_DIR}/kura/kura.properties\""
-JAVA_INT_OPTS="$JAVA_INT_OPTS -Djava.security.policy=\"${KURA_DIR}/kura/jdk.dio.policy\""
-JAVA_INT_OPTS="$JAVA_INT_OPTS -Djdk.dio.registry=\"${KURA_DIR}/kura/jdk.dio.properties\""
+JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.configuration=file:\"${KURA_DIR}/framework/kura.properties\""
+JAVA_INT_OPTS="$JAVA_INT_OPTS -Djava.security.policy=\"${KURA_DIR}/framework/jdk.dio.policy\""
+JAVA_INT_OPTS="$JAVA_INT_OPTS -Djdk.dio.registry=\"${KURA_DIR}/framework/jdk.dio.properties\""
 
 if [ -n "${PERSISTENT_DIR}" ]; then
 	JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.data=\"${PERSISTENT_DIR}/data\""
@@ -36,11 +36,11 @@ else
 	JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.data=\"${KURA_DIR}/data\""
 	JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.snapshots=\"${KURA_DIR}/data/snapshots\""
 	JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.packages=\"${KURA_DIR}/kura/packages\""
-	JAVA_INT_OPTS="$JAVA_INT_OPTS -Ddpa.configuration=\"${KURA_DIR}/kura/dpa.properties\""
+	JAVA_INT_OPTS="$JAVA_INT_OPTS -Ddpa.configuration=\"${KURA_DIR}/data/dpa.properties\""
 fi
 
-JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.custom.configuration=file:\"${KURA_CUSTOM_PROPERTIES_FILE:-${KURA_DIR}/kura/kura_custom.properties}\""
-JAVA_INT_OPTS="$JAVA_INT_OPTS -Dlog4j.configurationFile=file:\"${KURA_LOG4J_FILE:-${KURA_DIR}/kura/log4j.xml}\""
+JAVA_INT_OPTS="$JAVA_INT_OPTS -Dkura.custom.configuration=file:\"${KURA_CUSTOM_PROPERTIES_FILE:-${KURA_DIR}/user/kura_custom.properties}\""
+JAVA_INT_OPTS="$JAVA_INT_OPTS -Dlog4j.configurationFile=file:\"${KURA_LOG4J_FILE:-${KURA_DIR}/user/log4j.xml}\""
 
 set -x
 
