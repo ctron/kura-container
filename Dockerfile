@@ -8,7 +8,7 @@ LABEL maintainer="Jens Reimann <jreimann@redhat.com>" \
 ENV \
   DEFAULT_GIT_REPO=https://github.com/eclipse/kura.git \
   DEFAULT_GIT_BRANCH=develop \
-  DEFAULT_KURA_COMMIT=8be442a1eb723667ca765acbfcd3982575b3e6ca \
+  DEFAULT_KURA_COMMIT=d0420e8c7c16477ed47cdf014576ef6917bb0b69 \
   DEFAULT_PACKED=false \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests \
