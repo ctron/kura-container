@@ -47,6 +47,7 @@ RUN \
     `# Test for the existence of the entry point` \
     test -x "${KURA_DIR}/bin/start_kura.sh" && \
     rm -Rf /kura /root/.m2 && \
+    install -m 0777 -d "${KURA_DIR}/data" && \
     if [ "$PACKED" == "true" ]; then touch /kura.packed && pack-kura; fi
 
 COPY ./utils /usr/local/bin
@@ -56,7 +57,7 @@ RUN \
     dp-install "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.6.0/de.dentrassi.kura.addons.utils.fileinstall-0.6.0.dp" && \
     add-config-ini "felix.fileinstall.disableNio2=true" && \
     add-config-ini "felix.fileinstall.dir=/load" && \
-    sed -ie "s/org.osgi.service.http.port=.*/org.osgi.service.http.port=8080/g" "${KURA_DIR}/kura/config.ini" && \
+    sed -ie "s/org.osgi.service.http.port=.*/org.osgi.service.http.port=8080/g" "${KURA_DIR}/framework/config.ini" && \
     pack-kura
 
 EXPOSE 8080
