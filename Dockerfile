@@ -26,6 +26,8 @@ RUN \
     yum -y install scl-utils scl-utils-build centos-release-scl && \
     yum -y install git java-1.8.0-openjdk-devel rh-maven35 && \
     git clone "$GIT_REPO" -b "$GIT_BRANCH" && cd kura && git checkout $KURA_COMMIT && \
+    git revert -n 2149c3280ae38cd77ca5edc619af2b5e80d5668a && \
+    git log -1 && \
     ( \
       cd /kura && \
       `# Replace broken 'nn' script` \
