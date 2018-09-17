@@ -1,3 +1,3 @@
-# Camel goodness extension
+# Camel goodies extension
 
 This is an extended Kura container image, which contains all kinds of Camel components pre-installed.
