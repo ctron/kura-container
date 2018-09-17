@@ -16,4 +16,3 @@ RUN \
     dp-install "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.paho/0.6.0/de.dentrassi.kura.addons.paho-0.6.0.dp" && \
     pack-kura
 
-EXPOSE 5672 1883
