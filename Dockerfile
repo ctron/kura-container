@@ -5,9 +5,9 @@ LABEL maintainer="Jens Reimann <jreimann@redhat.com>" \
       io.k8s.description="Containerized version of the Eclipse Kura™ IoT gateway" \
       io.openshift.non-scalable=true
 
-ARG GIT_REPO=https://github.com/eclipse/kura.git
-ARG GIT_BRANCH=develop
-ARG KURA_COMMIT=d0420e8c7c16477ed47cdf014576ef6917bb0b69
+ARG GIT_REPO
+ARG GIT_BRANCH
+ARG KURA_COMMIT
 ARG PACKED=false
 
 ENV \
