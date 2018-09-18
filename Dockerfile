@@ -5,21 +5,21 @@ LABEL maintainer="Jens Reimann <jreimann@redhat.com>" \
       io.k8s.description="Containerized version of the Eclipse Kura™ IoT gateway" \
       io.openshift.non-scalable=true
 
+ARG GIT_REPO=https://github.com/eclipse/kura.git
+ARG GIT_BRANCH=develop
+ARG KURA_COMMIT=d0420e8c7c16477ed47cdf014576ef6917bb0b69
+ARG PACKED=false
+
 ENV \
-  DEFAULT_GIT_REPO=https://github.com/eclipse/kura.git \
-  DEFAULT_GIT_BRANCH=develop \
-  DEFAULT_KURA_COMMIT=d0420e8c7c16477ed47cdf014576ef6917bb0b69 \
-  DEFAULT_PACKED=false \
+  GIT_REPO=${GIT_REPO:-https://github.com/eclipse/kura.git} \
+  GIT_BRANCH=${GIT_BRANCH:-develop} \
+  KURA_COMMIT=${KURA_COMMIT:-d0420e8c7c16477ed47cdf014576ef6917bb0b69} \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests \
   KURA_DIR=/opt/eclipse/kura \
   LAUNCHER_VERSION="1.4.0.v20161219-1356"
 
 RUN \
-    : ${GIT_REPO:=${DEFAULT_GIT_REPO}} && \
-    : ${GIT_BRANCH:=${DEFAULT_GIT_BRANCH}} && \
-    : ${KURA_COMMIT:=${DEFAULT_KURA_COMMIT}} && \
-    : ${PACKED:=${DEFAULT_PACKED}} && \
     echo "$GIT_REPO / $GIT_BRANCH / $KURA_COMMIT" && \
     chmod a+x -R /usr/local/bin && \
     yum -y update && \
