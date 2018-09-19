@@ -5,6 +5,10 @@ LABEL maintainer="Jens Reimann <jreimann@redhat.com>" \
       io.k8s.description="Containerized version of the Eclipse Kura™ IoT gateway" \
       io.openshift.non-scalable=true
 
+RUN \
+    yum -y update && \
+    yum -y install scl-utils scl-utils-build centos-release-scl
+
 ARG GIT_REPO
 ARG GIT_BRANCH
 ARG KURA_COMMIT
@@ -21,11 +25,9 @@ ENV \
 
 RUN \
     echo "$GIT_REPO / $GIT_BRANCH / $KURA_COMMIT" && \
-    chmod a+x -R /usr/local/bin && \
-    yum -y update && \
-    yum -y install scl-utils scl-utils-build centos-release-scl && \
     yum -y install git java-1.8.0-openjdk-devel rh-maven35 && \
-    git clone "$GIT_REPO" -b "$GIT_BRANCH" && cd kura && git checkout $KURA_COMMIT && \
+    git clone "$GIT_REPO" -b "$GIT_BRANCH" && cd kura && \
+    if [ "$KURA_COMMIT" != "!" ]; then git checkout "$KURA_COMMIT"; fi && \
     git revert -n 2149c3280ae38cd77ca5edc619af2b5e80d5668a && \
     git log -1 && \
     ( \
@@ -55,6 +57,7 @@ RUN \
 COPY ./utils /usr/local/bin
 
 RUN \
+    chmod a+x -R /usr/local/bin && \
     unpack-kura && \
     dp-install "https://repo1.maven.org/maven2/de/dentrassi/kura/addons/de.dentrassi.kura.addons.utils.fileinstall/0.6.0/de.dentrassi.kura.addons.utils.fileinstall-0.6.0.dp" && \
     add-config-ini "felix.fileinstall.disableNio2=true" && \
