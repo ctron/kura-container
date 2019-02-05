@@ -8,6 +8,8 @@ Use the following command to run it:
 
 Once the image is started you can navigate your browser to http://localhost:8080 and log in using the credentials `admin` : `admin`.
 
+**Note:** The Git repository is now [ctron/kura-container](https://github.com/ctron/kura-container) and the Docker repository [ctron/kura](https://hub.docker.com/r/ctron/kura). 
+
 ## Enabling the interactive console
 
 By default the Kura instance will run without an Equinox console on the TTY. You can enable the interactive console by passing the argument `-console` to the container, be sure to also enable the interactive TTY support for the container:
