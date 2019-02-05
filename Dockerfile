@@ -16,8 +16,8 @@ ARG PACKED=false
 
 ENV \
   GIT_REPO=${GIT_REPO:-https://github.com/eclipse/kura.git} \
-  GIT_BRANCH=${GIT_BRANCH:-develop} \
-  KURA_COMMIT=${KURA_COMMIT:-d0420e8c7c16477ed47cdf014576ef6917bb0b69} \
+  GIT_BRANCH=${GIT_BRANCH:-release-4.0.0} \
+  KURA_COMMIT=${KURA_COMMIT:-f9f969231892769a269876b23f19fa0e8173e3df} \
   JAVA_HOME=/usr/lib/jvm/jre-1.8.0 \
   MAVEN_PROPS=-DskipTests \
   KURA_DIR=/opt/eclipse/kura \
