@@ -62,6 +62,7 @@ RUN \
     add-config-ini "felix.fileinstall.disableNio2=true" && \
     add-config-ini "felix.fileinstall.dir=/load" && \
     sed -i 's/org.osgi.service.http.port=.*/org.osgi.service.http.port=8080/g' "${KURA_DIR}/framework/config.ini" && \
+    sed -i 's/kura.primary.network.interface=.*/kura.primary.network.interface=eth0/g' "${KURA_DIR}/framework/kura.properties" && \
     pack-kura
 
 EXPOSE 8080
