@@ -5,7 +5,7 @@ metadata:
   annotations:
     openshift.io/display-name: Eclipse Kura™ fully persistent emulator instance
     description: >-
-      A deployment of Kura for running in a full persitent mode. This will check if a Kura
+      A deployment of Kura for running in a full persistent mode. This will check if a Kura
       instance is already present in the target volume. If not it will unpack the Kura instance
       from the container image. Subsequent starts will only use the unpacked Kura instance. Updating the
       container image doesn't update the Kura instance, but if the Kura instance is updated using its

@@ -5,7 +5,7 @@ metadata:
   annotations:
     openshift.io/display-name: Eclipse Kura™ semi-persistent emulator instance
     description: >-
-      A deployment of Kura for running in a semi-persitent mode. This will use the Kura
+      A deployment of Kura for running in a semi-persistent mode. This will use the Kura
       instance from the container image and keep data. It is not possible updating the instance
       using the Kura updater archives. In order to update Kura a new container image has to be used.
       But runtime data and configuration will be persisted.
